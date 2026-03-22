@@ -24,6 +24,14 @@ export default function HomePage() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.16fr)_minmax(18rem,0.84fr)] lg:items-end">
             <div className="space-y-6">
               <div className="space-y-4">
+                <div
+                  data-testid="hero-identity-strip"
+                  className="hero-kicker max-w-[38rem] flex-wrap gap-x-3 gap-y-1.5 px-3.5 py-2 text-[0.8rem] md:text-[0.84rem]"
+                >
+                  <span className="font-medium text-foreground/72">{profile.hero.eyebrow}</span>
+                  <span aria-hidden className="hidden h-3.5 w-px bg-border/85 md:block" />
+                  <span>{profile.hero.kicker}</span>
+                </div>
                 <h1 className="max-w-4xl font-heading text-[2.85rem] font-semibold leading-[1.08] tracking-tight text-balance md:text-[4.35rem]">
                   {profile.hero.headline}
                 </h1>

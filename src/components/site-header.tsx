@@ -1,53 +1,144 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { NavLink } from "@/components/nav-link";
 import { profile } from "@/config/profile";
+import { resolveSiteHeaderState } from "@/lib/site-header-scroll";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const hiddenRef = useRef(false);
+  const previousYRef = useRef(0);
+  const reducedMotionRef = useRef(false);
+  const frameRef = useRef<number | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(92);
+  const [headerState, setHeaderState] = useState({
+    hidden: false,
+    scrolled: false,
+  });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 12);
+    const headerNode = headerRef.current;
+
+    if (!headerNode) {
+      return;
+    }
+
+    const updateHeight = () => {
+      const nextHeight = Math.round(headerNode.getBoundingClientRect().height);
+
+      if (nextHeight > 0) {
+        setHeaderHeight(nextHeight);
+      }
     };
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    updateHeight();
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            updateHeight();
+          })
+        : null;
+
+    observer?.observe(headerNode);
+    window.addEventListener("resize", updateHeight);
 
     return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const syncHeaderState = () => {
+      const nextState = resolveSiteHeaderState({
+        currentY: window.scrollY,
+        previousY: previousYRef.current,
+        hidden: hiddenRef.current,
+        reducedMotion: reducedMotionRef.current,
+      });
+
+      previousYRef.current = window.scrollY;
+      hiddenRef.current = nextState.hidden;
+      setHeaderState((current) =>
+        current.hidden === nextState.hidden && current.scrolled === nextState.scrolled
+          ? current
+          : nextState,
+      );
+    };
+
+    const handleMotionPreference = () => {
+      reducedMotionRef.current = motionQuery.matches;
+      syncHeaderState();
+    };
+
+    const handleScroll = () => {
+      if (frameRef.current !== null) {
+        return;
+      }
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        frameRef.current = null;
+        syncHeaderState();
+      });
+    };
+
+    previousYRef.current = window.scrollY;
+    handleMotionPreference();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    motionQuery.addEventListener?.("change", handleMotionPreference);
+
+    return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+
       window.removeEventListener("scroll", handleScroll);
+      motionQuery.removeEventListener?.("change", handleMotionPreference);
     };
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 px-4 pt-4">
-      <div
+    <>
+      <div aria-hidden className="shrink-0" style={{ height: `${headerHeight}px` }} />
+      <header
+        ref={headerRef}
+        data-hidden={headerState.hidden ? "true" : "false"}
         className={cn(
-          "mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border px-5 py-3.5 transition-all duration-300",
-          scrolled
-            ? "border-border/70 bg-background/88 shadow-[0_18px_48px_-28px_rgba(14,26,46,0.28)] backdrop-blur-xl"
-            : "border-border/55 bg-background/72 backdrop-blur-md",
+          "fixed inset-x-0 top-0 z-40 px-4 pt-4 will-change-transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+          headerState.hidden ? "-translate-y-full" : "translate-y-0",
         )}
       >
-        <Link href="/" className="flex items-center gap-3">
-          <div className="grid size-11 place-items-center rounded-2xl border border-border/70 bg-white/75 text-sm font-semibold text-foreground shadow-sm">
-            {profile.initials}
-          </div>
-          <div className="space-y-1">
-            <div className="text-xs tracking-[0.18em] text-muted-foreground">{profile.brand.label}</div>
-            <div className="font-heading text-lg font-semibold text-foreground">{profile.name}</div>
-          </div>
-        </Link>
-        <nav className="flex flex-1 flex-wrap items-center justify-end gap-2 rounded-full border border-border/60 bg-white/70 p-1 backdrop-blur">
-          {profile.navigation.map((item) => (
-            <NavLink key={item.href} href={item.href} label={item.label} />
-          ))}
-        </nav>
-      </div>
-    </header>
+        <div
+          className={cn(
+            "mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border px-5 py-3.5 transition-[background-color,border-color,box-shadow] duration-300",
+            headerState.scrolled
+              ? "border-border/70 bg-background/88 shadow-[0_18px_48px_-28px_rgba(14,26,46,0.28)] backdrop-blur-xl"
+              : "border-border/55 bg-background/72 backdrop-blur-md",
+          )}
+        >
+          <Link href="/" className="flex items-center gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-border/70 bg-white/75 text-sm font-semibold text-foreground shadow-sm">
+              {profile.initials}
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs tracking-[0.18em] text-muted-foreground">{profile.brand.label}</div>
+              <div className="font-heading text-lg font-semibold text-foreground">{profile.name}</div>
+            </div>
+          </Link>
+          <nav className="flex flex-1 flex-wrap items-center justify-end gap-2 rounded-full border border-border/60 bg-white/70 p-1 backdrop-blur">
+            {profile.navigation.map((item) => (
+              <NavLink key={item.href} href={item.href} label={item.label} />
+            ))}
+          </nav>
+        </div>
+      </header>
+    </>
   );
 }

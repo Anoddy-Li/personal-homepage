@@ -70,6 +70,7 @@ pnpm seed
 
 - 主要改 [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 - 包括：首页文案、个人资料、关于我、联系信息、研究兴趣、技能、学习经历
+- 首页首屏灰色身份信息条的文案来自 `hero.eyebrow` 和 `hero.kicker`，渲染位置在 [src/app/(site)/page.tsx](/E:/personal-homepage/src/app/(site)/page.tsx)，这是保留元素，不要再误删
 
 数据库内容：
 
@@ -79,6 +80,7 @@ pnpm seed
 - 登录入口：`/login`
 - 后台入口：`/admin/study-logs`
 - 标签入口：`/admin/tags`
+- 顶部栏滚动行为在 [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx) 里维护，当前规则是“向下滚动时隐藏、向上滚动时出现”，修改时不要破坏这个交互
 
 ## 管理员后台如何登录和使用
 
@@ -98,6 +100,18 @@ pnpm seed
    - 删除未被日志使用的标签
 
 当前编辑器支持 Markdown 正文编辑和实时预览，保存后直接写入数据库；标签目录同样保存在数据库里，不再写死在前端。
+
+## 修改后的验收建议
+
+每次准备同步到线上前，至少完成下面这组检查：
+
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm test`
+- `pnpm build`
+- 检查首页灰色身份信息条是否正常显示
+- 检查顶部栏下滑隐藏、上滑出现是否自然
+- 检查学习日志公开页筛选、详情跳转、管理员日志 CRUD 和标签管理是否正常
 
 ## 字体方案
 

@@ -10,6 +10,8 @@
 
 首页最常改的字段：
 
+- `hero.eyebrow`
+- `hero.kicker`
 - `hero.headline`
 - `hero.intro`
 - `hero.primaryCta`
@@ -21,6 +23,10 @@
 如果你想改首页布局本身，再看：
 
 - [src/app/(site)/page.tsx](/E:/personal-homepage/src/app/(site)/page.tsx)
+
+补充说明：
+- 首页主标题上方那条灰色身份信息条是保留元素，文案来自 `hero.eyebrow` 和 `hero.kicker`
+- 如果只是改这条信息条的文字，优先改 [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 
 ## 2. 修改个人资料改哪个文件
 
@@ -181,6 +187,11 @@
 - [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx)
 - [src/components/site-footer.tsx](/E:/personal-homepage/src/components/site-footer.tsx)
 
+顶部栏补充原则：
+- 当前 header 采用“向下滚动隐藏、向上滚动出现”的交互
+- 相关逻辑在 [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx)
+- 修改时要继续保证：不抖动、不闪烁、不造成布局跳动，并尊重 `prefers-reduced-motion`
+
 ## 10. 我改完后怎么同步到线上
 
 如果你改的是静态内容或页面文件：
@@ -198,6 +209,7 @@ git push origin main
 当前项目已接入 Vercel：
 
 - push 到 `main` 后会自动触发线上部署
+- 同步前建议先验收：首页灰色身份信息条、header 滚动隐藏、学习日志公开页、管理员日志 CRUD、标签管理
 
 ## 11. 我以后最常改的几个文件
 

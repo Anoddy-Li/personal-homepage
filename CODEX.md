@@ -14,6 +14,7 @@
 - 整体气质参考头部科技公司官网：简洁、克制、现代、有设计感但不浮夸
 - 保持中文个人主页的温度，不做成炫技作品集
 - 首页首屏要紧凑，避免夸张大空白
+- 首页主标题上方的灰色身份信息条是保留元素，不要再误删
 - 可以有轻量 reveal、hover、scroll 状态变化，但必须性能友好并尊重 `prefers-reduced-motion`
 - 背景装饰保持轻，不要加重页面
 
@@ -22,6 +23,7 @@
 - 静态内容优先集中在 [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 - 学习日志新增 / 编辑 / 删除 / 发布，必须通过 `/login` 和 `/admin/study-logs`
 - 标签必须通过 `/admin/tags` 和数据库维护，不要重新写回前端常量
+- header 保持“向下滚动隐藏、向上滚动出现”的产品级交互，不要随意移除
 - 不要在公开页面提示用户通过改源文件来发布日志
 
 ## 修改后必须做的事
@@ -31,9 +33,10 @@
    `pnpm typecheck`
    `pnpm test`
    `pnpm build`
-2. 提交到 GitHub 仓库
-3. push 到 `main`
-4. 确认 Vercel 生产部署成功
+2. 验收：首页灰色身份信息条、header 滚动隐藏、学习日志公开页、管理员日志 CRUD、标签管理
+3. 提交到 GitHub 仓库
+4. push 到 `main`
+5. 确认 Vercel 生产部署成功
 
 ## 最常改的文件
 
