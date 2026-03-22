@@ -2,52 +2,51 @@
 
 这份文档只讲一件事：你以后自己怎么改这个网站。
 
-## 1. 我想修改姓名、简介、技能、学习经历、爱好、联系方式
+## 1. 修改首页文案改哪个文件
+
+优先修改：
+
+- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
+
+首页最常改的字段：
+
+- `hero.eyebrow`
+- `hero.kicker`
+- `hero.headline`
+- `hero.intro`
+- `hero.primaryCta`
+- `hero.secondaryCta`
+- `homeHighlights`
+- `statement`
+- `quickIntro`
+
+如果你想改首页布局本身，再看：
+
+- [src/app/(site)/page.tsx](/E:/personal-homepage/src/app/(site)/page.tsx)
+
+## 2. 修改个人资料改哪个文件
 
 统一修改：
 
 - [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 
-这个文件里主要有这些区域：
+常见字段：
 
 - `name`：姓名
+- `nickname`：昵称
+- `institution`：学校
+- `city`：所在地
 - `role`：身份标题
-- `hero`：首页标题、简介、按钮文案
-- `statement`、`quickIntro`：个人简介
+- `statement`、`quickIntro`：简介
+- `researchInterests`：研究方向
+- `principles`：做事方式
 - `skills`：技能
 - `tools`：常用工具
 - `education`：学习经历
 - `hobbies`：兴趣与长期关注
 - `projects`：最近在做的事
-- `contact`：邮箱、所在地、交流方向
 
-## 2. 我想修改首页文案
-
-改这里：
-
-- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
-
-主要是：
-
-- `hero.eyebrow`
-- `hero.headline`
-- `hero.intro`
-- `hero.primaryCta`
-- `hero.secondaryCta`
-
-## 3. 我想修改“关于我”页面内容
-
-内容来源仍然在：
-
-- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
-
-页面结构本身在：
-
-- [src/app/(site)/about/page.tsx](/E:/personal-homepage/src/app/(site)/about/page.tsx)
-
-如果你只是改文字，通常只需要改 `src/content/site.ts`。
-
-## 4. 我想修改联系页内容
+## 3. 修改联系信息改哪个文件
 
 改这里：
 
@@ -60,56 +59,118 @@
 - `contact.location`
 - `contact.availability`
 
-## 5. 我想新增一篇学习日志
+如果你想改联系页的排版结构，再看：
 
-学习日志不是改文件，而是走后台和数据库。
+- [src/app/(site)/contact/page.tsx](/E:/personal-homepage/src/app/(site)/contact/page.tsx)
+
+## 4. 学习日志以后如何新增 / 编辑 / 发布
+
+学习日志不是改源文件，而是走后台和数据库。
 
 操作流程：
 
 1. 打开线上站点或本地站点的 `/login`
 2. 用管理员账号登录
 3. 进入 `/admin/study-logs`
-4. 点击“新建日志”
-5. 填写标题、日期、摘要、正文、标签、状态、时长
-6. 勾选“公开显示”后保存，就会出现在公开的学习日志页
+4. 点击“新建日志”可以新增
+5. 点击“编辑”可以修改已有日志
+6. 点击“发布”或“转为草稿”可以切换公开状态
+7. 点击“删除”可以移除日志
 
-## 6. 我想修改一篇已有学习日志
+当前后台支持维护的字段：
 
-也是走后台：
+- 标题
+- 日期
+- 摘要
+- 正文（Markdown）
+- 标签
+- 是否公开
+- 学习时长
+- 心情
 
-1. 登录 `/login`
-2. 进入 `/admin/study-logs`
-3. 点击对应日志的“编辑”
-4. 修改后保存
+正文编辑器支持实时预览，保存后直接写入数据库。
 
-## 7. 我想把日志变成草稿或重新公开
-
-在后台日志列表页直接操作：
-
-1. 登录 `/login`
-2. 进入 `/admin/study-logs`
-3. 点击“发布”或“转为草稿”
-
-## 8. 管理员登录入口和基本流程
+## 5. 管理员账号有什么要求，怎么登录
 
 登录入口：
 
 - `/login`
 
-基本流程：
+要求：
 
 1. 管理员邮箱必须写在环境变量 `ADMIN_EMAILS` 里
 2. 这个邮箱对应的用户必须存在于 Supabase Auth
 3. 登录成功后会进入 `/admin`
 4. 后台只允许管理员访问
 
-## 9. 我改完静态内容后，怎么同步到线上
+## 6. 哪些内容是静态内容，哪些内容在数据库里维护
 
-如果你改的是文件内容，比如首页文案或个人资料：
+静态内容：
+
+- 首页文案
+- 个人简介
+- 关于我页面内容
+- 联系方式
+- 技能、工具、学习经历、兴趣、研究方向
+
+这些内容都主要在：
+
+- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
+
+数据库内容：
+
+- 学习日志列表
+- 学习日志详情
+- 学习日志的公开 / 草稿状态
+
+这些内容通过后台维护，不通过改源文件维护。
+
+## 7. 当前字体方案和后续如何替换
+
+当前字体方案在：
+
+- [src/app/layout.tsx](/E:/personal-homepage/src/app/layout.tsx)
+
+当前使用：
+
+- 正文：`Noto Sans SC`
+- 标题：`Noto Serif SC`
+- 备用：系统中文字体 fallback
+
+如果以后要换字体，建议保持这几个原则：
+
+- 中文优先，不要让中文退回到生硬的默认拉丁字体
+- 标题和正文要继续保持明确区分
+- 先保证生产可用和加载稳定，再追求个性
+- 全站只保留一组清晰的排版逻辑，不要随意混搭
+
+## 8. 当前首页设计原则和后续修改建议
+
+当前首页的目标不是“内容很多”，而是“信息少但层次清楚”。
+
+请尽量保持：
+
+- 首屏紧凑，但不要拥挤
+- 有留白，但不要出现夸张的大空白
+- 视觉像正式科技产品官网，而不是模板站
+- 动效要轻，只做淡入、轻位移、hover 微交互
+- 装饰要克制，只保留背景层次、细线、模糊光斑、网格等轻元素
+
+主要涉及文件：
+
+- [src/app/(site)/page.tsx](/E:/personal-homepage/src/app/(site)/page.tsx)
+- [src/app/globals.css](/E:/personal-homepage/src/app/globals.css)
+- [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx)
+- [src/components/site-footer.tsx](/E:/personal-homepage/src/components/site-footer.tsx)
+
+## 9. 我改完后怎么同步到线上
+
+如果你改的是静态内容或页面文件：
 
 ```bash
 pnpm lint
 pnpm typecheck
+pnpm test
 pnpm build
 git add .
 git commit -m "更新个人主页内容"
@@ -120,10 +181,12 @@ git push origin main
 
 - push 到 `main` 后会自动触发线上部署
 
-## 10. 我最常用的文件
+## 10. 我以后最常改的几个文件
 
-最常改的 3 个入口通常是：
+最常用的入口通常是：
 
 - [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
+- [src/app/(site)/page.tsx](/E:/personal-homepage/src/app/(site)/page.tsx)
+- [src/app/globals.css](/E:/personal-homepage/src/app/globals.css)
 - [src/app/(site)/about/page.tsx](/E:/personal-homepage/src/app/(site)/about/page.tsx)
 - [README.md](/E:/personal-homepage/README.md)

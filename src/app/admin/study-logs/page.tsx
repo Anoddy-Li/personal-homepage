@@ -38,6 +38,9 @@ export default async function AdminStudyLogsPage({
   return (
     <div className="space-y-6">
       {successMessage ? <StatusAlert title="保存成功" description={successMessage} tone="success" /> : null}
+      <div className="rounded-[1.5rem] border border-border/70 bg-white/70 px-5 py-4 text-sm leading-7 text-muted-foreground">
+        这里维护的是数据库中的正式学习日志内容。你可以直接新增、编辑、删除和发布，不需要修改任何源文件。
+      </div>
       <StudyLogFilters
         action="/admin/study-logs"
         filters={filters}

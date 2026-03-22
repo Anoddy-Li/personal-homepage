@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { getSessionContext } from "@/lib/auth";
@@ -36,6 +39,14 @@ export default async function AdminDashboardPage() {
           <CardTitle className="font-heading text-3xl">最近更新</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-3">
+            <Link className={buttonVariants()} href="/admin/study-logs/new">
+              新建日志
+            </Link>
+            <Link className={buttonVariants({ variant: "outline" })} href="/admin/study-logs">
+              查看全部日志
+            </Link>
+          </div>
           {logs.slice(0, 5).map((log) => (
             <div key={log.id} className="rounded-2xl border border-border/70 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">

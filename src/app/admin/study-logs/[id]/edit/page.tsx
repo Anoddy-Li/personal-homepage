@@ -35,6 +35,9 @@ export default async function EditStudyLogPage({
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">编辑日志</p>
         <h2 className="font-heading text-4xl font-semibold tracking-tight">{log.title}</h2>
+        <p className="max-w-2xl leading-7 text-muted-foreground">
+          这里修改的是数据库中的正式内容。保存后会立即生效，公开状态也会一起更新。
+        </p>
       </div>
       <StudyLogEditor initialLog={log} mode="edit" />
     </div>

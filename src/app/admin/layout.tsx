@@ -42,7 +42,7 @@ export default async function AdminLayout({
 
   return (
     <div className="container-shell space-y-8 py-10">
-      <header className="flex flex-wrap items-center justify-between gap-4 rounded-[2rem] border border-border/70 bg-card/85 p-6 shadow-sm">
+      <header className="surface-panel flex flex-wrap items-center justify-between gap-4 rounded-[2rem] p-6 shadow-sm">
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">后台管理</p>
           <h1 className="font-heading text-4xl font-semibold tracking-tight">学习日志管理</h1>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/login-form";
 import { PageHero } from "@/components/page-hero";
+import { SectionReveal } from "@/components/section-reveal";
 import { SetupAlert } from "@/components/setup-alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { profile } from "@/config/profile";
@@ -31,17 +32,21 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="container-shell grid gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-center">
-      <PageHero
-        eyebrow={profile.loginPage.eyebrow}
-        title={profile.loginPage.title}
-        description={profile.loginPage.description}
-      />
-      <Card className="rounded-[2rem] border-border/70 bg-card/85 shadow-sm">
-        <CardContent className="space-y-6 p-8">
-          {!isSupabaseConfigured() ? <SetupAlert /> : <LoginForm nextPath={nextPath} />}
-        </CardContent>
-      </Card>
+    <div className="container-shell grid gap-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+      <SectionReveal>
+        <PageHero
+          eyebrow={profile.loginPage.eyebrow}
+          title={profile.loginPage.title}
+          description={profile.loginPage.description}
+        />
+      </SectionReveal>
+      <SectionReveal delay={80}>
+        <Card className="surface-panel rounded-[2rem] border-border/70 bg-card/85 shadow-sm">
+          <CardContent className="space-y-6 p-8">
+            {!isSupabaseConfigured() ? <SetupAlert /> : <LoginForm nextPath={nextPath} />}
+          </CardContent>
+        </Card>
+      </SectionReveal>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export function EmptyState({
   title: string;
 }) {
   return (
-    <Card className="border-dashed bg-card/80">
+    <Card className="surface-panel rounded-[2rem] border-dashed bg-card/80">
       <CardHeader>
         <CardTitle className="font-heading text-2xl">{title}</CardTitle>
       </CardHeader>

@@ -120,7 +120,62 @@ export function AdminStudyLogTable({
           tone={feedback.tone}
         />
       ) : null}
-      <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/80">
+      <div className="grid gap-4 md:hidden">
+        {logs.map((log) => (
+          <div key={log.id} className="surface-panel rounded-[1.5rem] p-5">
+            <div className="space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="font-medium text-foreground">{log.title}</p>
+                  <p className="text-sm leading-7 text-muted-foreground">{log.summary}</p>
+                </div>
+                <Badge variant={log.isPublic ? "default" : "secondary"} className="rounded-full">
+                  {log.isPublic ? "公开" : "草稿"}
+                </Badge>
+              </div>
+              <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                <span>{formatDisplayDate(log.date)}</span>
+                {log.tags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="rounded-full">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  className={buttonVariants({ size: "sm", variant: "outline" })}
+                  href={`/admin/study-logs/${log.id}/edit`}
+                >
+                  编辑
+                </Link>
+                <Button
+                  onClick={() => {
+                    void toggleVisibility(log);
+                  }}
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                  disabled={pendingKey === `${log.id}:toggle`}
+                >
+                  {log.isPublic ? "转为草稿" : "发布"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    void deleteEntry(log);
+                  }}
+                  size="sm"
+                  type="button"
+                  variant="destructive"
+                  disabled={pendingKey === `${log.id}:delete`}
+                >
+                  删除
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="surface-panel hidden overflow-hidden rounded-3xl bg-card/80 md:block">
         <Table>
           <TableHeader>
             <TableRow>

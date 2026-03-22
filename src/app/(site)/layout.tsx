@@ -11,9 +11,12 @@ export default async function SiteLayout({
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(143,166,139,0.12),transparent_28%),linear-gradient(180deg,rgba(251,250,247,0.96),rgba(244,241,234,0.96))]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,_rgba(159,188,176,0.16),transparent_38%),radial-gradient(circle_at_88%_10%,rgba(86,110,146,0.09),transparent_22%)]" />
+        <div className="ambient-grid absolute inset-0 opacity-[0.28] [mask-image:linear-gradient(180deg,rgba(0,0,0,0.9),rgba(0,0,0,0.22),transparent)]" />
+      </div>
       <SiteHeader />
-      <main className="flex-1 py-14 md:py-16">{children}</main>
+      <main className="flex-1 pb-14 pt-6 md:pb-20 md:pt-8">{children}</main>
       <SiteFooter isAdmin={session.isAdmin} />
     </div>
   );

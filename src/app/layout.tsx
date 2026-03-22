@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Manrope, Newsreader } from "next/font/google";
+import { Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
 
 import { profile } from "@/config/profile";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
 
-const bodyFont = Manrope({
+const bodyFont = Noto_Sans_SC({
   variable: "--font-body",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  fallback: ["PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "sans-serif"],
 });
 
-const headingFont = Newsreader({
+const headingFont = Noto_Serif_SC({
   variable: "--font-heading",
-  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  fallback: ["Songti SC", "STSong", "Source Han Serif SC", "serif"],
 });
 
 export const metadata: Metadata = {
@@ -40,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang={profile.locale}
-      className={`${bodyFont.variable} ${headingFont.variable} h-full antialiased`}
+      className={`${bodyFont.variable} ${headingFont.variable} h-full bg-background antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

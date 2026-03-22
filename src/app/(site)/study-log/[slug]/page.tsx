@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { MarkdownContent } from "@/components/markdown-content";
+import { SectionReveal } from "@/components/section-reveal";
 import { profile } from "@/config/profile";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
@@ -79,30 +80,34 @@ export default async function StudyLogDetailPage({
 
   return (
     <article className="container-shell space-y-8">
-      <div className="space-y-4">
-        <Link className="text-sm text-muted-foreground underline underline-offset-4" href="/study-log">
-          {profile.studyLogPage.backLabel}
-        </Link>
-        <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">{formatDisplayDate(log.date)}</p>
-          <h1 className="max-w-4xl font-heading text-5xl font-semibold tracking-tight text-balance">
-            {log.title}
-          </h1>
-          <p className="max-w-3xl text-lg leading-8 text-muted-foreground">{log.summary}</p>
+      <SectionReveal>
+        <div className="space-y-4">
+          <Link className="text-sm text-muted-foreground underline underline-offset-4" href="/study-log">
+            {profile.studyLogPage.backLabel}
+          </Link>
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">{formatDisplayDate(log.date)}</p>
+            <h1 className="max-w-4xl font-heading text-5xl font-semibold tracking-tight text-balance">
+              {log.title}
+            </h1>
+            <p className="max-w-3xl text-lg leading-8 text-muted-foreground">{log.summary}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {log.mood ? <Badge variant="secondary">{log.mood}</Badge> : null}
+            {duration ? <Badge variant="secondary">{duration}</Badge> : null}
+            {log.tags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="rounded-full">
+                {tag}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {log.mood ? <Badge variant="secondary">{log.mood}</Badge> : null}
-          {duration ? <Badge variant="secondary">{duration}</Badge> : null}
-          {log.tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="rounded-full">
-              {tag}
-            </Badge>
-          ))}
+      </SectionReveal>
+      <SectionReveal delay={90}>
+        <div className="surface-panel rounded-[2rem] border border-border/70 bg-card/85 p-6 shadow-sm md:p-8">
+          <MarkdownContent content={log.content} />
         </div>
-      </div>
-      <div className="rounded-[2rem] border border-border/70 bg-card/85 p-6 shadow-sm md:p-8">
-        <MarkdownContent content={log.content} />
-      </div>
+      </SectionReveal>
     </article>
   );
 }
