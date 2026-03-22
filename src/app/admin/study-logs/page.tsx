@@ -2,11 +2,11 @@ import { AdminStudyLogTable } from "@/components/admin-study-log-table";
 import { EmptyState } from "@/components/empty-state";
 import { StatusAlert } from "@/components/status-alert";
 import { StudyLogFilters } from "@/components/study-log-filters";
-import { profile } from "@/config/profile";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { getSessionContext } from "@/lib/auth";
+import { listManagedStudyLogTags } from "@/lib/study-log-tag-service";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getFeaturedTags, isFiltered, listAdminStudyLogs } from "@/lib/study-log-service";
+import { isFiltered, listAdminStudyLogs } from "@/lib/study-log-service";
 import { getFirstValue } from "@/lib/url";
 
 function getSuccessMessage(value: string | undefined) {
@@ -28,11 +28,13 @@ export default async function AdminStudyLogsPage({
 }) {
   const params = await searchParams;
   const session = await getSessionContext();
+  const repo = createSupabaseStudyLogRepository(createSupabaseAdminClient());
   const { filters, logs } = await listAdminStudyLogs({
     actor: session.user,
     rawFilters: params,
-    repo: createSupabaseStudyLogRepository(createSupabaseAdminClient()),
+    repo,
   });
+  const suggestedTags = await listManagedStudyLogTags(repo);
   const successMessage = getSuccessMessage(getFirstValue(params.success));
 
   return (
@@ -45,7 +47,7 @@ export default async function AdminStudyLogsPage({
         action="/admin/study-logs"
         filters={filters}
         mode="admin"
-        suggestedTags={getFeaturedTags(logs, profile.studyLog.featuredTags)}
+        suggestedTags={suggestedTags}
       />
       {logs.length === 0 ? (
         <EmptyState

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
+import { TagFilterLink } from "@/components/tag-filter-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,14 +81,7 @@ export function StudyLogFilters({
         </form>
         <div className="flex flex-wrap gap-2">
           {suggestedTags.map((tag) => (
-            <Link key={tag} href={`${action}?tag=${encodeURIComponent(tag)}`}>
-              <Badge
-                variant={filters.tag === tag ? "default" : "secondary"}
-                className="rounded-full border border-border/60 bg-white/75 px-3 py-1.5"
-              >
-                {tag}
-              </Badge>
-            </Link>
+            <TagFilterLink key={tag} action={action} filters={filters} mode="public" tag={tag} />
           ))}
         </div>
       </div>
@@ -155,14 +148,7 @@ export function StudyLogFilters({
       </form>
       <div className="flex flex-wrap gap-2">
         {suggestedTags.map((tag) => (
-          <Link key={tag} href={`${action}?tag=${encodeURIComponent(tag)}`}>
-            <Badge
-              variant={filters.tag === tag ? "default" : "secondary"}
-              className="rounded-full border border-border/60 bg-white/75 px-3 py-1.5"
-            >
-              {tag}
-            </Badge>
-          </Link>
+          <TagFilterLink key={tag} action={action} filters={filters} mode="admin" tag={tag} />
         ))}
       </div>
     </div>

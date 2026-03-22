@@ -17,7 +17,11 @@ import { profile } from "@/config/profile";
 import type { StudyLog } from "@/db/study-log-repository";
 import { getErrorMessage } from "@/lib/app-error";
 import { cn } from "@/lib/utils";
-import { studyLogFormSchema, type StudyLogFormValues } from "@/schemas/study-log";
+import {
+  normalizeTagsInput,
+  studyLogFormSchema,
+  type StudyLogFormValues,
+} from "@/schemas/study-log";
 
 interface FeedbackState {
   message: string;
@@ -38,9 +42,11 @@ function toFormValues(log?: StudyLog): StudyLogFormValues {
 }
 
 export function StudyLogEditor({
+  availableTags = [],
   initialLog,
   mode,
 }: {
+  availableTags?: string[];
   initialLog?: StudyLog;
   mode: "create" | "edit";
 }) {
@@ -55,11 +61,19 @@ export function StudyLogEditor({
   const summaryPreview = form.watch("summary");
   const titlePreview = form.watch("title");
   const isPublicPreview = form.watch("isPublic");
-  const tagsPreview = form
-    .watch("tagsInput")
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+  const tagsPreview = normalizeTagsInput(form.watch("tagsInput"));
+
+  function toggleManagedTag(tag: string) {
+    const currentTags = normalizeTagsInput(form.getValues("tagsInput"));
+    const nextTags = currentTags.includes(tag)
+      ? currentTags.filter((item) => item !== tag)
+      : [...currentTags, tag];
+
+    form.setValue("tagsInput", nextTags.join(", "), {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }
 
   function applyIssues(issues: ZodIssue[]) {
     issues.forEach((issue) => {
@@ -220,6 +234,35 @@ export function StudyLogEditor({
               {...form.register("tagsInput")}
             />
             <p className="text-sm text-destructive">{form.formState.errors.tagsInput?.message}</p>
+            {availableTags.length > 0 ? (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {availableTags.map((tag) => {
+                  const isSelected = tagsPreview.includes(tag);
+
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        toggleManagedTag(tag);
+                      }}
+                      className={cn(
+                        "inline-flex min-h-9 items-center justify-center rounded-full border px-3 py-1.5 text-sm transition-colors",
+                        isSelected
+                          ? "border-primary/70 bg-primary text-primary-foreground hover:bg-primary/92"
+                          : "border-border/70 bg-white/75 text-foreground hover:bg-secondary",
+                      )}
+                    >
+                      {tag}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="pt-2 text-sm text-muted-foreground">
+                还没有可选标签。可以先去后台的“标签管理”里新建标签。
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="mood">状态</Label>

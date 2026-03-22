@@ -9,7 +9,7 @@ import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { isSupabaseConfigured } from "@/lib/env";
 import { buildMetadata } from "@/lib/metadata";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
-import { getFeaturedTags, isFiltered, listPublicStudyLogs } from "@/lib/study-log-service";
+import { isFiltered, listPublicStudyLogs } from "@/lib/study-log-service";
 
 export const metadata = buildMetadata({
   description: "公开的学习日志，支持按日期、标签和关键词筛选。",
@@ -43,8 +43,9 @@ export default async function StudyLogPage({
     rawFilters: params,
     repo: createSupabaseStudyLogRepository(createSupabasePublicClient()),
   });
-
-  const suggestedTags = getFeaturedTags(logs, profile.studyLog.featuredTags);
+  const suggestedTags = Array.from(new Set(logs.flatMap((log) => log.tags))).sort((left, right) =>
+    left.localeCompare(right, "zh-CN"),
+  );
 
   return (
     <div className="container-shell space-y-6">

@@ -23,10 +23,6 @@ export default function HomePage() {
           <div className="absolute -right-12 top-10 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(163,194,186,0.22),transparent_68%)] blur-3xl" />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.16fr)_minmax(18rem,0.84fr)] lg:items-end">
             <div className="space-y-6">
-              <div className="space-y-3">
-                <p className="eyebrow-line">{profile.hero.eyebrow}</p>
-                <p className="hero-kicker">{profile.hero.kicker}</p>
-              </div>
               <div className="space-y-4">
                 <h1 className="max-w-4xl font-heading text-[2.85rem] font-semibold leading-[1.08] tracking-tight text-balance md:text-[4.35rem]">
                   {profile.hero.headline}

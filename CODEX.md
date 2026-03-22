@@ -21,6 +21,7 @@
 
 - 静态内容优先集中在 [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 - 学习日志新增 / 编辑 / 删除 / 发布，必须通过 `/login` 和 `/admin/study-logs`
+- 标签必须通过 `/admin/tags` 和数据库维护，不要重新写回前端常量
 - 不要在公开页面提示用户通过改源文件来发布日志
 
 ## 修改后必须做的事

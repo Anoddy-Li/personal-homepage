@@ -4,6 +4,7 @@ import { StudyLogEditor } from "@/components/study-log-editor";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
 import { getSessionContext } from "@/lib/auth";
+import { listManagedStudyLogTags } from "@/lib/study-log-tag-service";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getStudyLogById } from "@/lib/study-log-service";
 
@@ -14,13 +15,14 @@ export default async function EditStudyLogPage({
 }) {
   const { id } = await params;
   const session = await getSessionContext();
+  const repo = createSupabaseStudyLogRepository(createSupabaseAdminClient());
   let log;
 
   try {
     log = await getStudyLogById({
       actor: session.user,
       id,
-      repo: createSupabaseStudyLogRepository(createSupabaseAdminClient()),
+      repo,
     });
   } catch (error) {
     if (error instanceof AppError && error.statusCode === 404) {
@@ -29,6 +31,8 @@ export default async function EditStudyLogPage({
 
     throw error;
   }
+
+  const availableTags = await listManagedStudyLogTags(repo);
 
   return (
     <div className="space-y-4">
@@ -39,7 +43,7 @@ export default async function EditStudyLogPage({
           这里修改的是数据库中的正式内容。保存后会立即生效，公开状态也会一起更新。
         </p>
       </div>
-      <StudyLogEditor initialLog={log} mode="edit" />
+      <StudyLogEditor availableTags={availableTags} initialLog={log} mode="edit" />
     </div>
   );
 }

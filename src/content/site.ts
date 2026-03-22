@@ -187,7 +187,6 @@ export const siteContent = {
     availability: "欢迎围绕物理学习、量子非互易计算、物理学科教育和长期记录方法交流。",
   },
   studyLog: {
-    featuredTags: ["物理", "力学", "编程", "反思", "研究"],
     moodOptions: ["专注", "好奇", "平稳", "疲惫", "满足"],
     editorTips: [
       "摘要先写最重要的收获或卡点，方便以后快速回看。",

@@ -1,6 +1,13 @@
 import { StudyLogEditor } from "@/components/study-log-editor";
+import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
+import { listManagedStudyLogTags } from "@/lib/study-log-tag-service";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-export default function NewStudyLogPage() {
+export default async function NewStudyLogPage() {
+  const availableTags = await listManagedStudyLogTags(
+    createSupabaseStudyLogRepository(createSupabaseAdminClient()),
+  );
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -10,7 +17,7 @@ export default function NewStudyLogPage() {
           保存后会直接写入数据库；是否公开由下方开关控制，后续也可以在列表页继续切换。
         </p>
       </div>
-      <StudyLogEditor mode="create" />
+      <StudyLogEditor availableTags={availableTags} mode="create" />
     </div>
   );
 }

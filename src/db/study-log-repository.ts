@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database, StudyLogRow } from "@/db/database.types";
 import { AppError } from "@/lib/app-error";
+import { STUDY_LOG_TAG_CATALOG_SLUG } from "@/lib/study-log-tag-catalog";
 
 export interface StudyLog {
   authorId: string | null;
@@ -71,7 +72,7 @@ function mapStudyLog(row: StudyLogRow): StudyLog {
 }
 
 function applyCommonFilters(query: StudyLogQuery, filters: StudyLogListFilters) {
-  let nextQuery = query;
+  let nextQuery = query.neq("slug", STUDY_LOG_TAG_CATALOG_SLUG);
 
   if (filters.date) {
     nextQuery = nextQuery.eq("date", filters.date);

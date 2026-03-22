@@ -6,6 +6,7 @@ import type {
   StudyLogWriteInput,
 } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
+import { STUDY_LOG_TAG_CATALOG_SLUG } from "@/lib/study-log-tag-catalog";
 import {
   createStudyLog,
   deleteStudyLog,
@@ -58,11 +59,11 @@ class InMemoryStudyLogRepository implements StudyLogRepository {
   }
 
   async listAdmin() {
-    return [...this.logs];
+    return this.logs.filter((log) => log.slug !== STUDY_LOG_TAG_CATALOG_SLUG);
   }
 
   async listPublic() {
-    return this.logs.filter((log) => log.isPublic);
+    return this.logs.filter((log) => log.isPublic && log.slug !== STUDY_LOG_TAG_CATALOG_SLUG);
   }
 
   async update(id: string, input: Partial<StudyLogWriteInput>) {

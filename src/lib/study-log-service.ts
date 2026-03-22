@@ -7,6 +7,7 @@ import type {
 } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
 import { assertAdminAccess } from "@/lib/auth";
+import { syncManagedStudyLogTags } from "@/lib/study-log-tag-service";
 import { buildStudyLogBaseSlug } from "@/lib/study-log-slug";
 import type { RouteSearchParams } from "@/lib/url";
 import {
@@ -69,8 +70,11 @@ export async function createStudyLog(params: {
 
   const input = parseStudyLogFormValues(params.rawInput);
   const slug = await generateUniqueSlug(params.repo, input.date, input.title);
+  const log = await params.repo.create(buildWriteInput(input, slug, params.actor?.id));
 
-  return params.repo.create(buildWriteInput(input, slug, params.actor?.id));
+  await syncManagedStudyLogTags(params.repo, input.tags);
+
+  return log;
 }
 
 export async function updateStudyLog(params: {
@@ -89,8 +93,11 @@ export async function updateStudyLog(params: {
 
   const input = parseStudyLogFormValues(params.rawInput);
   const slug = await generateUniqueSlug(params.repo, input.date, input.title, params.id);
+  const log = await params.repo.update(params.id, buildWriteInput(input, slug, existing.authorId));
 
-  return params.repo.update(params.id, buildWriteInput(input, slug, existing.authorId));
+  await syncManagedStudyLogTags(params.repo, input.tags);
+
+  return log;
 }
 
 export async function deleteStudyLog(params: {
@@ -190,23 +197,6 @@ export function summarizeStudyLogs(logs: StudyLog[]) {
     publicCount: logs.filter((log) => log.isPublic).length,
     totalCount: logs.length,
   };
-}
-
-export function getFeaturedTags(logs: StudyLog[], fallbackTags: readonly string[]) {
-  const tagCounts = new Map<string, number>();
-
-  logs.forEach((log) => {
-    log.tags.forEach((tag) => {
-      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-    });
-  });
-
-  const dynamicTags = [...tagCounts.entries()]
-    .sort((left, right) => right[1] - left[1])
-    .slice(0, 6)
-    .map(([tag]) => tag);
-
-  return Array.from(new Set([...dynamicTags, ...fallbackTags])).slice(0, 8);
 }
 
 export function isFiltered(filters: StudyLogFilterValues) {

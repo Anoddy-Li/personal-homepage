@@ -54,6 +54,9 @@ export default async function AdminLayout({
           <Link className={buttonVariants({ variant: "outline" })} href="/admin/study-logs">
             日志列表
           </Link>
+          <Link className={buttonVariants({ variant: "outline" })} href="/admin/tags">
+            标签管理
+          </Link>
           <Link className={buttonVariants()} href="/admin/study-logs/new">
             新建日志
           </Link>
