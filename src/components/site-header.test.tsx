@@ -44,6 +44,11 @@ describe("SiteHeader", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     setScrollY(0);
+    Object.defineProperty(window, "scrollTo", {
+      configurable: true,
+      value: vi.fn(),
+      writable: true,
+    });
     vi.stubGlobal(
       "requestAnimationFrame",
       ((callback: FrameRequestCallback) => {
@@ -73,27 +78,61 @@ describe("SiteHeader", () => {
     vi.unstubAllGlobals();
   });
 
-  it("hides on downward scroll and shows on upward scroll", () => {
+  it("shows only within the top range and keeps the back-to-top button in sync", () => {
     render(<SiteHeader />);
 
     const header = screen.getByRole("banner");
+    const backToTopButton = screen.getByRole("button", { name: "回到顶部" });
 
     expect(header).toHaveAttribute("data-hidden", "false");
+    expect(backToTopButton).toHaveAttribute("data-visible", "false");
 
     act(() => {
-      setScrollY(168);
+      setScrollY(148);
       window.dispatchEvent(new Event("scroll"));
       vi.runAllTimers();
     });
 
     expect(header).toHaveAttribute("data-hidden", "true");
+    expect(backToTopButton).toHaveAttribute("data-visible", "true");
 
     act(() => {
-      setScrollY(108);
+      setScrollY(220);
+      window.dispatchEvent(new Event("scroll"));
+      vi.runAllTimers();
+    });
+
+    expect(header).toHaveAttribute("data-hidden", "true");
+    expect(backToTopButton).toHaveAttribute("data-visible", "true");
+
+    act(() => {
+      setScrollY(48);
       window.dispatchEvent(new Event("scroll"));
       vi.runAllTimers();
     });
 
     expect(header).toHaveAttribute("data-hidden", "false");
+    expect(backToTopButton).toHaveAttribute("data-visible", "false");
+  });
+
+  it("scrolls back to the top when the floating button is pressed", async () => {
+    render(<SiteHeader />);
+
+    const backToTopButton = screen.getByRole("button", { name: "回到顶部" });
+
+    act(() => {
+      setScrollY(180);
+      window.dispatchEvent(new Event("scroll"));
+      vi.runAllTimers();
+    });
+
+    expect(backToTopButton).toHaveAttribute("data-visible", "true");
+
+    backToTopButton.click();
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      behavior: "smooth",
+      top: 0,
+    });
   });
 });

@@ -23,7 +23,7 @@
 - 静态内容优先集中在 [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 - 学习日志新增 / 编辑 / 删除 / 发布，必须通过 `/login` 和 `/admin/study-logs`
 - 标签必须通过 `/admin/tags` 和数据库维护，不要重新写回前端常量
-- header 保持“向下滚动隐藏、向上滚动出现”的产品级交互，不要随意移除
+- header 保持“仅顶部范围可见”的产品级交互，回到顶部按钮与它共用同一套顶部阈值
 - 不要在公开页面提示用户通过改源文件来发布日志
 
 ## 修改后必须做的事
@@ -33,7 +33,7 @@
    `pnpm typecheck`
    `pnpm test`
    `pnpm build`
-2. 验收：首页灰色身份信息条、header 滚动隐藏、学习日志公开页、管理员日志 CRUD、标签管理
+2. 验收：首页灰色身份信息条、header 顶部范围显示、回到顶部按钮、学习日志公开页、管理员日志 CRUD、标签管理
 3. 提交到 GitHub 仓库
 4. push 到 `main`
 5. 确认 Vercel 生产部署成功

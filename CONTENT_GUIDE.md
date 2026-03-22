@@ -188,8 +188,9 @@
 - [src/components/site-footer.tsx](/E:/personal-homepage/src/components/site-footer.tsx)
 
 顶部栏补充原则：
-- 当前 header 采用“向下滚动隐藏、向上滚动出现”的交互
+- 当前 header 采用“仅顶部范围可见”的交互
 - 相关逻辑在 [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx)
+- 回到顶部按钮与 header 共用同一套顶部阈值，辅助逻辑在 [src/lib/site-header-scroll.ts](/E:/personal-homepage/src/lib/site-header-scroll.ts)
 - 修改时要继续保证：不抖动、不闪烁、不造成布局跳动，并尊重 `prefers-reduced-motion`
 
 ## 10. 我改完后怎么同步到线上
@@ -209,7 +210,7 @@ git push origin main
 当前项目已接入 Vercel：
 
 - push 到 `main` 后会自动触发线上部署
-- 同步前建议先验收：首页灰色身份信息条、header 滚动隐藏、学习日志公开页、管理员日志 CRUD、标签管理
+- 同步前建议先验收：首页灰色身份信息条、header 顶部范围显示、回到顶部按钮、学习日志公开页、管理员日志 CRUD、标签管理
 
 ## 11. 我以后最常改的几个文件
 

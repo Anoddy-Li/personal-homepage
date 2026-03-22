@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { NavLink } from "@/components/nav-link";
@@ -10,15 +11,14 @@ import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const headerRef = useRef<HTMLElement | null>(null);
-  const hiddenRef = useRef(false);
-  const previousYRef = useRef(0);
   const reducedMotionRef = useRef(false);
   const frameRef = useRef<number | null>(null);
   const [headerHeight, setHeaderHeight] = useState(92);
-  const [headerState, setHeaderState] = useState({
-    hidden: false,
-    scrolled: false,
-  });
+  const [headerState, setHeaderState] = useState(() =>
+    resolveSiteHeaderState({
+      currentY: 0,
+    }),
+  );
 
   useEffect(() => {
     const headerNode = headerRef.current;
@@ -59,15 +59,13 @@ export function SiteHeader() {
     const syncHeaderState = () => {
       const nextState = resolveSiteHeaderState({
         currentY: window.scrollY,
-        previousY: previousYRef.current,
-        hidden: hiddenRef.current,
-        reducedMotion: reducedMotionRef.current,
       });
 
-      previousYRef.current = window.scrollY;
-      hiddenRef.current = nextState.hidden;
       setHeaderState((current) =>
-        current.hidden === nextState.hidden && current.scrolled === nextState.scrolled
+        current.hidden === nextState.hidden &&
+        current.scrolled === nextState.scrolled &&
+        current.showBackToTop === nextState.showBackToTop &&
+        current.withinTopRange === nextState.withinTopRange
           ? current
           : nextState,
       );
@@ -89,7 +87,6 @@ export function SiteHeader() {
       });
     };
 
-    previousYRef.current = window.scrollY;
     handleMotionPreference();
     window.addEventListener("scroll", handleScroll, { passive: true });
     motionQuery.addEventListener?.("change", handleMotionPreference);
@@ -103,6 +100,13 @@ export function SiteHeader() {
       motionQuery.removeEventListener?.("change", handleMotionPreference);
     };
   }, []);
+
+  const handleBackToTop = () => {
+    window.scrollTo({
+      behavior: reducedMotionRef.current ? "auto" : "smooth",
+      top: 0,
+    });
+  };
 
   return (
     <>
@@ -139,6 +143,21 @@ export function SiteHeader() {
           </nav>
         </div>
       </header>
+      <button
+        type="button"
+        aria-label="回到顶部"
+        data-visible={headerState.showBackToTop ? "true" : "false"}
+        onClick={handleBackToTop}
+        className={cn(
+          "fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/88 px-3.5 py-3 text-sm text-foreground shadow-[0_18px_40px_-26px_rgba(14,26,46,0.32)] backdrop-blur-xl transition-[opacity,transform,background-color,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/70 motion-reduce:transition-none md:bottom-6 md:right-6",
+          headerState.showBackToTop
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-3 opacity-0",
+        )}
+      >
+        <ArrowUp className="size-4" />
+        <span className="hidden sm:inline">回到顶部</span>
+      </button>
     </>
   );
 }

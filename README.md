@@ -80,7 +80,8 @@ pnpm seed
 - 登录入口：`/login`
 - 后台入口：`/admin/study-logs`
 - 标签入口：`/admin/tags`
-- 顶部栏滚动行为在 [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx) 里维护，当前规则是“向下滚动时隐藏、向上滚动时出现”，修改时不要破坏这个交互
+- 顶部栏与回到顶部按钮的交互在 [src/components/site-header.tsx](/E:/personal-homepage/src/components/site-header.tsx) 和 [src/lib/site-header-scroll.ts](/E:/personal-homepage/src/lib/site-header-scroll.ts) 里维护
+- 当前规则是“仅在页面顶部可见范围内显示 header；离开这个范围后隐藏 header 并显示回到顶部按钮”
 
 ## 管理员后台如何登录和使用
 
@@ -110,7 +111,8 @@ pnpm seed
 - `pnpm test`
 - `pnpm build`
 - 检查首页灰色身份信息条是否正常显示
-- 检查顶部栏下滑隐藏、上滑出现是否自然
+- 检查顶部栏是否只在顶部范围内显示
+- 检查回到顶部按钮是否只在离开顶部范围后出现，并能平滑回顶
 - 检查学习日志公开页筛选、详情跳转、管理员日志 CRUD 和标签管理是否正常
 
 ## 字体方案
