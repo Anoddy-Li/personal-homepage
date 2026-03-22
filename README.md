@@ -1,25 +1,28 @@
 # personal-homepage
 
-A production-ready personal website built with Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase, and Vercel.
+一个基于 Next.js、Supabase 和 Vercel 的中文个人主页项目。当前版本重点放在两个方向：
 
-## Stack
+- 用简洁的公开页面展示个人信息
+- 用后台维护数据库里的学习日志
 
-- Next.js 16 + App Router
+## 技术栈
+
+- Next.js 16（App Router）
 - TypeScript
 - Tailwind CSS 4
 - shadcn/ui
 - Supabase Postgres + Auth
-- Zod for input validation
-- Vitest for service and validation tests
+- Zod
+- Vitest
 
-## Local development
+## 本地启动
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Useful commands:
+常用检查命令：
 
 ```bash
 pnpm lint
@@ -29,122 +32,109 @@ pnpm build
 pnpm seed
 ```
 
-## Environment variables
+## 环境变量
 
-Copy `.env.example` to `.env.local` and fill these values:
+把 `.env.example` 复制为 `.env.local`，然后填写：
 
 ```bash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-ADMIN_EMAILS=your-admin-email@example.com
+NEXT_PUBLIC_SUPABASE_URL=你的 Supabase 项目地址
+NEXT_PUBLIC_SUPABASE_ANON_KEY=你的 Supabase anon key
+SUPABASE_SERVICE_ROLE_KEY=你的 Supabase service role key
+ADMIN_EMAILS=你的管理员邮箱
 ```
 
-Notes:
+说明：
 
-- `NEXT_PUBLIC_SITE_URL` should be your Vercel production URL after deployment.
-- `ADMIN_EMAILS` is a comma-separated list of emails allowed into `/admin`.
-- `SUPABASE_SERVICE_ROLE_KEY` is only used on the server for admin CRUD and seed scripts. Never expose it in client code.
+- `NEXT_PUBLIC_SITE_URL` 本地开发时可用 `http://localhost:3000`
+- 线上部署后应改成正式站点地址
+- `ADMIN_EMAILS` 支持多个邮箱，用英文逗号分隔
+- `SUPABASE_SERVICE_ROLE_KEY` 只允许在服务端使用，不能暴露到前端
 
-## Supabase setup
+## Supabase 配置
 
-1. Create a new Supabase project.
-2. In Supabase, copy the project URL and anon key into `.env.local`.
-3. Copy the service role key into `.env.local`.
-4. Run the SQL migration in [supabase/migrations/202603220001_create_study_logs.sql](/E:/personal-homepage/supabase/migrations/202603220001_create_study_logs.sql).
-5. Create an auth user whose email matches `ADMIN_EMAILS`.
-6. Start the app with `pnpm dev`.
-7. Optionally seed example entries with `pnpm seed`.
-
-If you use the Supabase CLI, the equivalent flow is:
+1. 创建 Supabase 项目
+2. 把项目的 URL、anon key、service role key 填进 `.env.local`
+3. 执行数据库 migration：
+   [supabase/migrations/202603220001_create_study_logs.sql](/E:/personal-homepage/supabase/migrations/202603220001_create_study_logs.sql)
+4. 在 Supabase Auth 中创建管理员账号，邮箱要和 `ADMIN_EMAILS` 一致
+5. 如需写入演示数据，执行：
 
 ```bash
-supabase db push
 pnpm seed
 ```
 
-## Vercel deployment
+## 修改后如何提交并更新线上网站
 
-1. Log in to Vercel with `vercel login`.
-2. Set the same environment variables in the Vercel project settings.
-3. Deploy with:
+推荐流程：
 
 ```bash
-vercel
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+git add .
+git commit -m "你的提交说明"
+git push origin main
+```
+
+## Vercel 自动部署如何触发
+
+当前项目已经和 GitHub 仓库联动。
+
+- 当你把代码 push 到 `main` 后，Vercel 会自动拉取最新提交并重新部署
+- 部署完成后，线上地址会自动更新到最新版本
+- 如果你只想手动触发一次生产部署，也可以在本地执行：
+
+```bash
 vercel --prod
 ```
 
-4. After the first production deployment, update `NEXT_PUBLIC_SITE_URL` to the final production URL and redeploy.
+## GitHub 仓库
 
-## GitHub repository
+- 仓库地址：
+  [https://github.com/Anoddy-Li/personal-homepage](https://github.com/Anoddy-Li/personal-homepage)
+- 默认分支：`main`
 
-- Repository name: `personal-homepage`
-- Default branch target: `main`
-- Recommended workflow after local verification:
-
-```bash
-git add .
-git commit -m "Build personal homepage with Supabase study log"
-git push -u origin main
-```
-
-If `gh` is not logged in, run:
+如果本机 `gh` 未登录，可先执行：
 
 ```bash
 gh auth login
 ```
 
-## Project structure
+## 你以后最常改的内容
 
-- [src/app](/E:/personal-homepage/src/app): routes, layouts, metadata, API handlers
-- [src/components](/E:/personal-homepage/src/components): UI building blocks and forms
-- [src/config/profile.ts](/E:/personal-homepage/src/config/profile.ts): centralized personal profile content
-- [src/db](/E:/personal-homepage/src/db): database types and repository
-- [src/lib](/E:/personal-homepage/src/lib): auth, env, formatting, services
-- [src/schemas](/E:/personal-homepage/src/schemas): Zod schemas
-- [supabase/migrations](/E:/personal-homepage/supabase/migrations): SQL migrations
-- [scripts/seed.ts](/E:/personal-homepage/scripts/seed.ts): sample data seeding
+静态文案和个人资料：
 
-## How to modify personal profile later
+- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)
 
-Edit [src/config/profile.ts](/E:/personal-homepage/src/config/profile.ts).
+学习日志后台录入：
 
-This file controls:
+- `/login`
+- `/admin/study-logs`
 
-- name
-- role
-- focus tags
-- hero text
-- education timeline
-- hobbies
-- projects
-- contact placeholders
-- navigation labels
-- featured study log tags
+详细维护说明：
 
-## How to add new study logs later
+- [CONTENT_GUIDE.md](/E:/personal-homepage/CONTENT_GUIDE.md)
 
-1. Make sure Supabase is configured and your admin email is listed in `ADMIN_EMAILS`.
-2. Open `/login` and sign in.
-3. Go to `/admin/study-logs/new`.
-4. Fill out the form.
-5. Save as draft or switch `Public visibility` on before saving.
+## 项目结构
 
-You can also:
+- [src/app](/E:/personal-homepage/src/app)：页面、布局、API Route
+- [src/components](/E:/personal-homepage/src/components)：页面组件、表单、表格
+- [src/content/site.ts](/E:/personal-homepage/src/content/site.ts)：集中维护站点静态内容
+- [src/db](/E:/personal-homepage/src/db)：数据仓储与数据库类型
+- [src/lib](/E:/personal-homepage/src/lib)：鉴权、环境变量、服务逻辑
+- [src/schemas](/E:/personal-homepage/src/schemas)：Zod 校验
+- [scripts/seed.ts](/E:/personal-homepage/scripts/seed.ts)：演示学习日志 seed
 
-- edit entries at `/admin/study-logs`
-- delete entries at `/admin/study-logs`
-- publish or unpublish entries from the admin table
+## 当前已实现
 
-## What is implemented
-
-- Public pages: Home, About, Education, Hobbies, Projects, Contact
-- Public Study Log list and detail pages
-- Search, date filter, tag filter
-- Admin login with Supabase Auth
-- Admin-only Study Log create, update, delete, publish, unpublish
-- Supabase-backed persistence
-- Zod validation on both client and server
-- SEO metadata, sitemap, robots, Open Graph image, 404, loading, error state
-- Tests for service logic, validation, visibility boundary, and admin access control
+- 中文化的公开主页
+- 精简后的四项导航：首页 / 关于我 / 学习日志 / 联系
+- 合并后的“关于我”页面
+- 学习日志公开列表、详情、筛选
+- 管理员登录
+- 学习日志后台创建 / 编辑 / 删除 / 发布 / 转草稿
+- Supabase 持久化
+- 前后端 Zod 校验
+- 404 / loading / error / sitemap / robots / Open Graph

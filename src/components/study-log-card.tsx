@@ -13,20 +13,20 @@ export function StudyLogCard({
   const duration = formatDuration(log.durationMinutes);
 
   return (
-    <Card className="h-full border-border/70 bg-card/80 transition-transform hover:-translate-y-0.5">
+    <Card className="h-full rounded-[1.5rem] border-border/70 bg-card/80 shadow-sm">
       <CardHeader className="space-y-3">
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span>{formatDisplayDate(log.date)}</span>
           {log.mood ? <span>{log.mood}</span> : null}
           {duration ? <span>{duration}</span> : null}
         </div>
-        <CardTitle className="font-heading text-2xl leading-tight">
+        <CardTitle className="font-heading text-xl leading-tight md:text-2xl">
           <Link href={`/study-log/${log.slug}`} className="hover:text-primary">
             {log.title}
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <p className="leading-7 text-muted-foreground">{log.summary}</p>
         <div className="flex flex-wrap gap-2">
           {log.tags.map((tag) => (

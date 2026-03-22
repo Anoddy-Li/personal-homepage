@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
-import { getErrorMessage, AppError } from "@/lib/app-error";
+import { AppError, getErrorMessage } from "@/lib/app-error";
 import { getSessionContext } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createStudyLog } from "@/lib/study-log-service";
@@ -19,13 +19,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         data: log,
-        message: "Study log created.",
+        message: "学习日志已创建。",
       },
       { status: 201 },
     );
   } catch (error) {
     return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to create this study log.") },
+      { error: getErrorMessage(error, "创建学习日志失败。") },
       { status: error instanceof AppError ? error.statusCode : 500 },
     );
   }

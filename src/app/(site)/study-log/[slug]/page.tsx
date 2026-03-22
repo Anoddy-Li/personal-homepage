@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { MarkdownContent } from "@/components/markdown-content";
+import { profile } from "@/config/profile";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
 import { isSupabaseConfigured } from "@/lib/env";
@@ -28,9 +29,9 @@ export async function generateMetadata({
 
   if (!isSupabaseConfigured()) {
     return buildMetadata({
-      description: "Study log detail page",
+      description: "学习日志详情页",
       path: `/study-log/${slug}`,
-      title: "Study Log Entry",
+      title: "学习日志",
     });
   }
 
@@ -44,9 +45,9 @@ export async function generateMetadata({
     });
   } catch {
     return buildMetadata({
-      description: "Study log detail page",
+      description: "学习日志详情页",
       path: `/study-log/${slug}`,
-      title: "Study Log Entry",
+      title: "学习日志",
     });
   }
 }
@@ -80,12 +81,10 @@ export default async function StudyLogDetailPage({
     <article className="container-shell space-y-8">
       <div className="space-y-4">
         <Link className="text-sm text-muted-foreground underline underline-offset-4" href="/study-log">
-          Back to Study Log
+          {profile.studyLogPage.backLabel}
         </Link>
         <div className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            {formatDisplayDate(log.date)}
-          </p>
+          <p className="text-sm text-muted-foreground">{formatDisplayDate(log.date)}</p>
           <h1 className="max-w-4xl font-heading text-5xl font-semibold tracking-tight text-balance">
             {log.title}
           </h1>
@@ -101,7 +100,7 @@ export default async function StudyLogDetailPage({
           ))}
         </div>
       </div>
-      <div className="rounded-[2rem] border border-border/70 bg-card/85 p-8 shadow-sm">
+      <div className="rounded-[2rem] border border-border/70 bg-card/85 p-6 shadow-sm md:p-8">
         <MarkdownContent content={log.content} />
       </div>
     </article>

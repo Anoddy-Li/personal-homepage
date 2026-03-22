@@ -70,10 +70,7 @@ function mapStudyLog(row: StudyLogRow): StudyLog {
   };
 }
 
-function applyCommonFilters(
-  query: StudyLogQuery,
-  filters: StudyLogListFilters,
-) {
+function applyCommonFilters(query: StudyLogQuery, filters: StudyLogListFilters) {
   let nextQuery = query;
 
   if (filters.date) {
@@ -129,7 +126,7 @@ export function createSupabaseStudyLogRepository(
 
       assertNoQueryError(error);
       if (!data) {
-        throw new AppError(500, "Study log creation returned no data.");
+        throw new AppError(500, "创建学习日志后没有返回数据。");
       }
 
       return mapStudyLog(data);
@@ -237,7 +234,7 @@ export function createSupabaseStudyLogRepository(
 
       assertNoQueryError(error);
       if (!data) {
-        throw new AppError(500, "Study log update returned no data.");
+        throw new AppError(500, "更新学习日志后没有返回数据。");
       }
 
       return mapStudyLog(data);

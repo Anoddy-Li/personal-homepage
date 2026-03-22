@@ -6,35 +6,14 @@ import { getFirstValue, type RouteSearchParams } from "@/lib/url";
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 export const studyLogFormSchema = z.object({
-  content: z
-    .string()
-    .trim()
-    .min(30, "Content should be at least 30 characters.")
-    .max(20000, "Content is too long."),
-  date: z.string().regex(isoDateRegex, "Choose a valid date."),
-  durationMinutes: z
-    .string()
-    .trim()
-    .max(5, "Duration is too long.")
-    .optional()
-    .default(""),
+  content: z.string().trim().min(30, "正文至少需要 30 个字符。").max(20000, "正文内容过长。"),
+  date: z.string().regex(isoDateRegex, "请选择有效日期。"),
+  durationMinutes: z.string().trim().max(5, "时长输入过长。").optional().default(""),
   isPublic: z.boolean(),
-  mood: z.string().trim().max(40, "Mood is too long.").optional().default(""),
-  summary: z
-    .string()
-    .trim()
-    .min(12, "Summary should be at least 12 characters.")
-    .max(280, "Summary is too long."),
-  tagsInput: z
-    .string()
-    .trim()
-    .min(1, "Add at least one tag.")
-    .max(120, "Too many tags."),
-  title: z
-    .string()
-    .trim()
-    .min(3, "Title should be at least 3 characters.")
-    .max(120, "Title is too long."),
+  mood: z.string().trim().max(40, "状态内容过长。").optional().default(""),
+  summary: z.string().trim().min(12, "摘要至少需要 12 个字符。").max(280, "摘要内容过长。"),
+  tagsInput: z.string().trim().min(1, "请至少填写一个标签。").max(120, "标签内容过长。"),
+  title: z.string().trim().min(3, "标题至少需要 3 个字符。").max(120, "标题内容过长。"),
 });
 
 export const studyLogVisibilitySchema = z.object({
@@ -45,10 +24,7 @@ export const studyLogFiltersSchema = z.object({
   date: z.string().regex(isoDateRegex).optional().or(z.literal("")).default(""),
   q: z.string().trim().max(100).optional().default(""),
   tag: z.string().trim().max(24).optional().default(""),
-  visibility: z
-    .enum(["all", "public", "private"])
-    .optional()
-    .default("all"),
+  visibility: z.enum(["all", "public", "private"]).optional().default("all"),
 });
 
 export interface StudyLogFormValues {
@@ -91,32 +67,28 @@ export function normalizeTagsInput(tagsInput: string) {
   );
 }
 
-export function parseStudyLogFormValues(
-  rawInput: unknown,
-): StudyLogMutationInput {
+export function parseStudyLogFormValues(rawInput: unknown): StudyLogMutationInput {
   const parsed = studyLogFormSchema.safeParse(rawInput);
 
   if (!parsed.success) {
-    throw new AppError(400, parsed.error.issues[0]?.message ?? "Invalid study log data.");
+    throw new AppError(400, parsed.error.issues[0]?.message ?? "学习日志数据不合法。");
   }
 
   const tags = normalizeTagsInput(parsed.data.tagsInput);
 
   if (tags.length === 0) {
-    throw new AppError(400, "Add at least one tag.");
+    throw new AppError(400, "请至少填写一个标签。");
   }
 
-  const durationMinutes = parsed.data.durationMinutes
-    ? Number(parsed.data.durationMinutes)
-    : null;
+  const durationMinutes = parsed.data.durationMinutes ? Number(parsed.data.durationMinutes) : null;
 
   if (durationMinutes !== null) {
     if (!Number.isInteger(durationMinutes) || durationMinutes <= 0) {
-      throw new AppError(400, "Duration must be a positive whole number.");
+      throw new AppError(400, "时长必须是大于 0 的整数。");
     }
 
     if (durationMinutes > 1440) {
-      throw new AppError(400, "Duration must be less than one day.");
+      throw new AppError(400, "时长不能超过一天。");
     }
   }
 

@@ -30,10 +30,10 @@ async function parseResponseMessage(response: Response) {
     | null;
 
   if (!response.ok) {
-    throw new Error(body?.error ?? "Request failed.");
+    throw new Error(body?.error ?? "请求失败。");
   }
 
-  return body?.message ?? "Success.";
+  return body?.message ?? "操作成功。";
 }
 
 export function AdminStudyLogTable({
@@ -62,7 +62,7 @@ export function AdminStudyLogTable({
       );
 
       setFeedback({
-        message: log.isPublic ? "Entry moved back to draft." : "Entry published.",
+        message: log.isPublic ? "日志已切换回草稿。" : "日志已公开发布。",
         tone: "success",
       });
       startTransition(() => {
@@ -70,7 +70,7 @@ export function AdminStudyLogTable({
       });
     } catch (error) {
       setFeedback({
-        message: getErrorMessage(error, "Unable to update visibility."),
+        message: getErrorMessage(error, "更新可见性失败。"),
         tone: "error",
       });
     } finally {
@@ -79,7 +79,7 @@ export function AdminStudyLogTable({
   }
 
   async function deleteEntry(log: StudyLog) {
-    if (!window.confirm(`Delete "${log.title}"? This cannot be undone.`)) {
+    if (!window.confirm(`确定删除《${log.title}》吗？此操作无法撤销。`)) {
       return;
     }
 
@@ -95,7 +95,7 @@ export function AdminStudyLogTable({
       );
 
       setFeedback({
-        message: "Entry deleted.",
+        message: "日志已删除。",
         tone: "success",
       });
       startTransition(() => {
@@ -103,7 +103,7 @@ export function AdminStudyLogTable({
       });
     } catch (error) {
       setFeedback({
-        message: getErrorMessage(error, "Unable to delete this entry."),
+        message: getErrorMessage(error, "删除日志失败。"),
         tone: "error",
       });
     } finally {
@@ -116,7 +116,7 @@ export function AdminStudyLogTable({
       {feedback ? (
         <StatusAlert
           description={feedback.message}
-          title={feedback.tone === "success" ? "Done" : "Request failed"}
+          title={feedback.tone === "success" ? "操作完成" : "操作失败"}
           tone={feedback.tone}
         />
       ) : null}
@@ -124,11 +124,11 @@ export function AdminStudyLogTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Tags</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>标题</TableHead>
+              <TableHead>日期</TableHead>
+              <TableHead>状态</TableHead>
+              <TableHead>标签</TableHead>
+              <TableHead className="text-right">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,7 +143,7 @@ export function AdminStudyLogTable({
                 <TableCell>{formatDisplayDate(log.date)}</TableCell>
                 <TableCell>
                   <Badge variant={log.isPublic ? "default" : "secondary"}>
-                    {log.isPublic ? "Public" : "Draft"}
+                    {log.isPublic ? "公开" : "草稿"}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -161,7 +161,7 @@ export function AdminStudyLogTable({
                       className={buttonVariants({ size: "sm", variant: "outline" })}
                       href={`/admin/study-logs/${log.id}/edit`}
                     >
-                      Edit
+                      编辑
                     </Link>
                     <Button
                       onClick={() => {
@@ -172,7 +172,7 @@ export function AdminStudyLogTable({
                       variant="outline"
                       disabled={pendingKey === `${log.id}:toggle`}
                     >
-                      {log.isPublic ? "Unpublish" : "Publish"}
+                      {log.isPublic ? "转为草稿" : "发布"}
                     </Button>
                     <Button
                       onClick={() => {
@@ -183,14 +183,14 @@ export function AdminStudyLogTable({
                       variant="destructive"
                       disabled={pendingKey === `${log.id}:delete`}
                     >
-                      Delete
+                      删除
                     </Button>
                     {log.isPublic ? (
                       <Link
                         className={buttonVariants({ size: "sm", variant: "ghost" })}
                         href={`/study-log/${log.slug}`}
                       >
-                        View
+                        查看
                       </Link>
                     ) : null}
                   </div>

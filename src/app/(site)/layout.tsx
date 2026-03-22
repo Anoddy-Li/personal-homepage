@@ -11,10 +11,10 @@ export default async function SiteLayout({
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(132,193,196,0.18),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.78),rgba(246,243,237,0.92))]" />
-      <SiteHeader isAdmin={session.isAdmin} />
-      <main className="flex-1 py-10">{children}</main>
-      <SiteFooter />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(143,166,139,0.12),transparent_28%),linear-gradient(180deg,rgba(251,250,247,0.96),rgba(244,241,234,0.96))]" />
+      <SiteHeader />
+      <main className="flex-1 py-14 md:py-16">{children}</main>
+      <SiteFooter isAdmin={session.isAdmin} />
     </div>
   );
 }

@@ -29,7 +29,8 @@ export function getSiteUrl() {
 }
 
 export function getAdminEmails() {
-  return readEnv().ADMIN_EMAILS.split(",")
+  return readEnv()
+    .ADMIN_EMAILS.split(",")
     .map((entry) => entry.trim().toLowerCase())
     .filter(Boolean);
 }
@@ -37,34 +38,26 @@ export function getAdminEmails() {
 export function isSupabaseConfigured() {
   const currentEnv = readEnv();
 
-  return Boolean(
-    currentEnv.NEXT_PUBLIC_SUPABASE_URL &&
-      currentEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  );
+  return Boolean(currentEnv.NEXT_PUBLIC_SUPABASE_URL && currentEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 }
 
 export function isSupabaseAdminConfigured() {
   const currentEnv = readEnv();
 
-  return Boolean(
-    isSupabaseConfigured() && currentEnv.SUPABASE_SERVICE_ROLE_KEY,
-  );
+  return Boolean(isSupabaseConfigured() && currentEnv.SUPABASE_SERVICE_ROLE_KEY);
 }
 
 export function assertSupabaseConfigured() {
   if (!isSupabaseConfigured()) {
     throw new AppError(
       503,
-      "Supabase is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      "Supabase 尚未配置完成，请先补齐 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY。",
     );
   }
 }
 
 export function assertSupabaseAdminConfigured() {
   if (!isSupabaseAdminConfigured()) {
-    throw new AppError(
-      503,
-      "Supabase admin access is not configured yet. Add SUPABASE_SERVICE_ROLE_KEY.",
-    );
+    throw new AppError(503, "Supabase 管理端权限尚未配置，请补齐 SUPABASE_SERVICE_ROLE_KEY。");
   }
 }

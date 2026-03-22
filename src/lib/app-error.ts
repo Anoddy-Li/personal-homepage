@@ -8,10 +8,7 @@ export class AppError extends Error {
   }
 }
 
-export function getErrorMessage(
-  error: unknown,
-  fallback = "Something went wrong.",
-) {
+export function getErrorMessage(error: unknown, fallback = "发生了一点问题。") {
   if (error instanceof AppError) {
     return error.message;
   }

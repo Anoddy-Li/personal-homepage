@@ -32,8 +32,8 @@ export default async function AdminLayout({
     return (
       <div className="container-shell py-10">
         <StatusAlert
-          title="Access denied"
-          description="This account is authenticated, but it is not listed in ADMIN_EMAILS."
+          title="没有权限"
+          description="这个账号已经登录，但没有在 ADMIN_EMAILS 中被配置为管理员。"
           tone="error"
         />
       </div>
@@ -44,18 +44,18 @@ export default async function AdminLayout({
     <div className="container-shell space-y-8 py-10">
       <header className="flex flex-wrap items-center justify-between gap-4 rounded-[2rem] border border-border/70 bg-card/85 p-6 shadow-sm">
         <div className="space-y-2">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin dashboard</p>
-          <h1 className="font-heading text-4xl font-semibold tracking-tight">Study Log management</h1>
+          <p className="text-sm text-muted-foreground">后台管理</p>
+          <h1 className="font-heading text-4xl font-semibold tracking-tight">学习日志管理</h1>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link className={buttonVariants({ variant: "outline" })} href="/admin">
-            Overview
+            概览
           </Link>
           <Link className={buttonVariants({ variant: "outline" })} href="/admin/study-logs">
-            Entries
+            日志列表
           </Link>
           <Link className={buttonVariants()} href="/admin/study-logs/new">
-            New entry
+            新建日志
           </Link>
           <LogoutButton />
         </div>

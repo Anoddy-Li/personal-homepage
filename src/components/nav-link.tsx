@@ -19,10 +19,8 @@ export function NavLink({
     <Link
       href={href}
       className={cn(
-        "rounded-full px-3 py-1.5 text-sm transition-colors",
-        isActive
-          ? "bg-primary text-primary-foreground"
-          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+        "rounded-full px-2 py-1 text-sm transition-colors",
+        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
       )}
     >
       {label}

@@ -15,7 +15,7 @@ describe("auth helpers", () => {
     process.env.ADMIN_EMAILS = "admin@example.com";
 
     expect(() => assertAdminAccess({ email: "student@example.com" })).toThrow(
-      "Administrator access is required",
+      "只有管理员可以执行这个操作。",
     );
   });
 });

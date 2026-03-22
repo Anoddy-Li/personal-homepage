@@ -8,16 +8,12 @@ export function PageHero({
   title: string;
 }) {
   return (
-    <section className="space-y-4">
-      <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-        {eyebrow}
-      </p>
+    <section className="space-y-3">
+      <p className="text-sm text-muted-foreground">{eyebrow}</p>
       <h1 className="font-heading text-4xl font-semibold tracking-tight text-balance md:text-5xl">
         {title}
       </h1>
-      <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
-        {description}
-      </p>
+      <p className="max-w-3xl leading-8 text-muted-foreground md:text-lg">{description}</p>
     </section>
   );
 }

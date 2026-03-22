@@ -11,11 +11,11 @@ import { getFirstValue } from "@/lib/url";
 
 function getSuccessMessage(value: string | undefined) {
   if (value === "created") {
-    return "Study log created successfully.";
+    return "学习日志已创建。";
   }
 
   if (value === "updated") {
-    return "Study log updated successfully.";
+    return "学习日志已更新。";
   }
 
   return null;
@@ -37,9 +37,7 @@ export default async function AdminStudyLogsPage({
 
   return (
     <div className="space-y-6">
-      {successMessage ? (
-        <StatusAlert title="Saved" description={successMessage} tone="success" />
-      ) : null}
+      {successMessage ? <StatusAlert title="保存成功" description={successMessage} tone="success" /> : null}
       <StudyLogFilters
         action="/admin/study-logs"
         filters={filters}
@@ -48,14 +46,14 @@ export default async function AdminStudyLogsPage({
       />
       {logs.length === 0 ? (
         <EmptyState
-          title={isFiltered(filters) ? "No entries match these filters" : "No study logs yet"}
+          title={isFiltered(filters) ? "没有符合条件的日志" : "还没有学习日志"}
           description={
             isFiltered(filters)
-              ? "Clear one or more filters and try again."
-              : "Create your first entry to start the archive."
+              ? "可以清掉部分筛选条件后再试。"
+              : "先新建第一篇日志，再慢慢把归档补起来。"
           }
           actionHref="/admin/study-logs/new"
-          actionLabel="Create an entry"
+          actionLabel="新建日志"
         />
       ) : (
         <AdminStudyLogTable logs={logs} />

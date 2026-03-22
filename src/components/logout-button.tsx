@@ -28,7 +28,7 @@ export function LogoutButton() {
 
   return (
     <Button onClick={() => void handleLogout()} type="button" variant="outline" disabled={pending}>
-      {pending ? "Signing out..." : "Sign out"}
+      {pending ? "退出中..." : "退出登录"}
     </Button>
   );
 }

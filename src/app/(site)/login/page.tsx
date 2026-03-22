@@ -4,6 +4,7 @@ import { LoginForm } from "@/components/login-form";
 import { PageHero } from "@/components/page-hero";
 import { SetupAlert } from "@/components/setup-alert";
 import { Card, CardContent } from "@/components/ui/card";
+import { profile } from "@/config/profile";
 import { getSessionContext } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/env";
 import { buildMetadata } from "@/lib/metadata";
@@ -13,7 +14,7 @@ export const metadata = buildMetadata({
   description: "管理员登录入口。",
   noIndex: true,
   path: "/login",
-  title: "Login",
+  title: "后台登录",
 });
 
 export default async function LoginPage({
@@ -32,17 +33,13 @@ export default async function LoginPage({
   return (
     <div className="container-shell grid gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-center">
       <PageHero
-        eyebrow="Admin login"
-        title="Sign in to manage study logs."
-        description="Only administrator accounts listed in ADMIN_EMAILS can access the dashboard. All study log writes go through authenticated backend routes."
+        eyebrow={profile.loginPage.eyebrow}
+        title={profile.loginPage.title}
+        description={profile.loginPage.description}
       />
       <Card className="rounded-[2rem] border-border/70 bg-card/85 shadow-sm">
         <CardContent className="space-y-6 p-8">
-          {!isSupabaseConfigured() ? (
-            <SetupAlert />
-          ) : (
-            <LoginForm nextPath={nextPath} />
-          )}
+          {!isSupabaseConfigured() ? <SetupAlert /> : <LoginForm nextPath={nextPath} />}
         </CardContent>
       </Card>
     </div>

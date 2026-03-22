@@ -14,10 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { profile } from "@/config/profile";
 import type { StudyLog } from "@/db/study-log-repository";
 import { getErrorMessage } from "@/lib/app-error";
-import {
-  studyLogFormSchema,
-  type StudyLogFormValues,
-} from "@/schemas/study-log";
+import { studyLogFormSchema, type StudyLogFormValues } from "@/schemas/study-log";
 
 interface FeedbackState {
   message: string;
@@ -98,28 +95,21 @@ export function StudyLogEditor({
         | null;
 
       if (!response.ok) {
-        throw new Error(payload?.error ?? "Unable to save this study log.");
+        throw new Error(payload?.error ?? "保存学习日志失败。");
       }
 
       setFeedback({
-        message:
-          mode === "create"
-            ? "Study log created successfully."
-            : "Study log updated successfully.",
+        message: mode === "create" ? "学习日志已创建。" : "学习日志已更新。",
         tone: "success",
       });
 
       startTransition(() => {
-        router.push(
-          mode === "create"
-            ? "/admin/study-logs?success=created"
-            : "/admin/study-logs?success=updated",
-        );
+        router.push(mode === "create" ? "/admin/study-logs?success=created" : "/admin/study-logs?success=updated");
         router.refresh();
       });
     } catch (error) {
       setFeedback({
-        message: getErrorMessage(error, "Unable to save this study log."),
+        message: getErrorMessage(error, "保存学习日志失败。"),
         tone: "error",
       });
     } finally {
@@ -132,7 +122,7 @@ export function StudyLogEditor({
       {feedback ? (
         <StatusAlert
           description={feedback.message}
-          title={feedback.tone === "success" ? "Saved" : "Save failed"}
+          title={feedback.tone === "success" ? "已保存" : "保存失败"}
           tone={feedback.tone}
         />
       ) : null}
@@ -144,64 +134,47 @@ export function StudyLogEditor({
       >
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">标题</Label>
             <Input id="title" {...form.register("title")} />
-            <p className="text-sm text-destructive">
-              {form.formState.errors.title?.message}
-            </p>
+            <p className="text-sm text-destructive">{form.formState.errors.title?.message}</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date">日期</Label>
             <Input id="date" type="date" {...form.register("date")} />
-            <p className="text-sm text-destructive">
-              {form.formState.errors.date?.message}
-            </p>
+            <p className="text-sm text-destructive">{form.formState.errors.date?.message}</p>
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="summary">Summary</Label>
+          <Label htmlFor="summary">摘要</Label>
           <Textarea id="summary" rows={4} {...form.register("summary")} />
-          <p className="text-sm text-destructive">
-            {form.formState.errors.summary?.message}
-          </p>
+          <p className="text-sm text-destructive">{form.formState.errors.summary?.message}</p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="content">Content (Markdown)</Label>
+          <Label htmlFor="content">正文（Markdown）</Label>
           <Textarea id="content" rows={16} {...form.register("content")} />
           <p className="text-sm text-muted-foreground">
-            Write in Markdown. Headings, lists, and code fences are supported on the public page.
+            支持 Markdown。公开页会正确显示标题、列表和代码块。
           </p>
-          <p className="text-sm text-destructive">
-            {form.formState.errors.content?.message}
-          </p>
+          <p className="text-sm text-destructive">{form.formState.errors.content?.message}</p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           <div className="space-y-2">
-            <Label htmlFor="tagsInput">Tags</Label>
-            <Input id="tagsInput" placeholder="physics, coding, reflection" {...form.register("tagsInput")} />
-            <p className="text-sm text-destructive">
-              {form.formState.errors.tagsInput?.message}
-            </p>
+            <Label htmlFor="tagsInput">标签</Label>
+            <Input id="tagsInput" placeholder="物理, 编程, 反思" {...form.register("tagsInput")} />
+            <p className="text-sm text-destructive">{form.formState.errors.tagsInput?.message}</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="mood">Mood</Label>
-            <Input
-              id="mood"
-              list="mood-options"
-              placeholder="Focused"
-              {...form.register("mood")}
-            />
+            <Label htmlFor="mood">状态</Label>
+            <Input id="mood" list="mood-options" placeholder="专注" {...form.register("mood")} />
             <datalist id="mood-options">
               {profile.studyLog.moodOptions.map((option) => (
                 <option key={option} value={option} />
               ))}
             </datalist>
-            <p className="text-sm text-destructive">
-              {form.formState.errors.mood?.message}
-            </p>
+            <p className="text-sm text-destructive">{form.formState.errors.mood?.message}</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="durationMinutes">Duration (minutes)</Label>
+            <Label htmlFor="durationMinutes">时长（分钟）</Label>
             <Input
               id="durationMinutes"
               inputMode="numeric"
@@ -220,25 +193,18 @@ export function StudyLogEditor({
             {...form.register("isPublic")}
           />
           <div>
-            <p className="font-medium">Public visibility</p>
+            <p className="font-medium">公开显示</p>
             <p className="text-sm text-muted-foreground">
-              Turn this on to publish the entry on the public Study Log page.
+              打开后，这篇日志会出现在公开的学习日志页面。
             </p>
           </div>
         </label>
         <div className="flex flex-wrap items-center gap-3">
           <Button disabled={isSubmitting} type="submit">
-            {isSubmitting
-              ? "Saving..."
-              : mode === "create"
-                ? "Create study log"
-                : "Save changes"}
+            {isSubmitting ? "保存中..." : mode === "create" ? "创建日志" : "保存修改"}
           </Button>
-          <Link
-            className={buttonVariants({ variant: "outline" })}
-            href="/admin/study-logs"
-          >
-            Cancel
+          <Link className={buttonVariants({ variant: "outline" })} href="/admin/study-logs">
+            取消
           </Link>
         </div>
       </form>

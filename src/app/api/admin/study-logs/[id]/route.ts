@@ -25,11 +25,11 @@ export async function PATCH(
 
     return NextResponse.json({
       data: log,
-      message: "Study log updated.",
+      message: "学习日志已更新。",
     });
   } catch (error) {
     return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to update this study log.") },
+      { error: getErrorMessage(error, "更新学习日志失败。") },
       { status: error instanceof AppError ? error.statusCode : 500 },
     );
   }
@@ -51,11 +51,11 @@ export async function DELETE(
     });
 
     return NextResponse.json({
-      message: "Study log deleted.",
+      message: "学习日志已删除。",
     });
   } catch (error) {
     return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to delete this study log.") },
+      { error: getErrorMessage(error, "删除学习日志失败。") },
       { status: error instanceof AppError ? error.statusCode : 500 },
     );
   }

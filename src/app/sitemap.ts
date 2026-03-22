@@ -4,15 +4,7 @@ import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
 import { getSiteUrl, isSupabaseConfigured } from "@/lib/env";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 
-const staticRoutes = [
-  "",
-  "/about",
-  "/education",
-  "/hobbies",
-  "/projects",
-  "/contact",
-  "/study-log",
-];
+const staticRoutes = ["", "/about", "/contact", "/study-log"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getSiteUrl();

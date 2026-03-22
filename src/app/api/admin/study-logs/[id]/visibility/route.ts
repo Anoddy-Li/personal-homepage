@@ -20,7 +20,7 @@ export async function POST(
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message ?? "Invalid visibility value." },
+        { error: parsed.error.issues[0]?.message ?? "可见性参数不合法。" },
         { status: 400 },
       );
     }
@@ -35,11 +35,11 @@ export async function POST(
 
     return NextResponse.json({
       data: log,
-      message: parsed.data.isPublic ? "Study log published." : "Study log hidden.",
+      message: parsed.data.isPublic ? "学习日志已公开。" : "学习日志已转为草稿。",
     });
   } catch (error) {
     return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to update visibility.") },
+      { error: getErrorMessage(error, "更新可见性失败。") },
       { status: error instanceof AppError ? error.statusCode : 500 },
     );
   }

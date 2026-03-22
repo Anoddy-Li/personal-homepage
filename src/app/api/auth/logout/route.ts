@@ -8,11 +8,8 @@ export async function POST() {
     const supabase = await createSupabaseServerClient();
     await supabase.auth.signOut();
 
-    return NextResponse.json({ message: "Signed out." });
+    return NextResponse.json({ message: "已退出登录。" });
   } catch (error) {
-    return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to sign out.") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getErrorMessage(error, "退出登录失败。") }, { status: 500 });
   }
 }

@@ -33,7 +33,7 @@ export default async function EditStudyLogPage({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Edit entry</p>
+        <p className="text-sm text-muted-foreground">编辑日志</p>
         <h2 className="font-heading text-4xl font-semibold tracking-tight">{log.title}</h2>
       </div>
       <StudyLogEditor initialLog={log} mode="edit" />

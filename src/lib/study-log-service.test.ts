@@ -69,7 +69,7 @@ class InMemoryStudyLogRepository implements StudyLogRepository {
     const existing = await this.findById(id);
 
     if (!existing) {
-      throw new AppError(404, "Study log entry not found.");
+      throw new AppError(404, "学习日志不存在。");
     }
 
     const nextLog: StudyLog = {
@@ -99,15 +99,14 @@ const adminActor = {
 };
 
 const validInput = {
-  content:
-    "I worked through derivations carefully, rewrote the argument, and noted where my understanding was still shallow.",
+  content: "我把推导一步一步重新写了一遍，也记录了自己卡住的地方和后来理顺思路的过程。",
   date: "2026-03-22",
   durationMinutes: "90",
   isPublic: false,
-  mood: "Focused",
-  summary: "A valid summary describing a careful physics study session.",
-  tagsInput: "physics, reflection",
-  title: "Deriving equations with more patience",
+  mood: "专注",
+  summary: "这是一段满足校验要求的摘要，用来描述一次认真复盘的学习过程。",
+  tagsInput: "物理, 反思",
+  title: "更耐心地重新整理推导过程",
 };
 
 describe("study log service", () => {
@@ -125,8 +124,24 @@ describe("study log service", () => {
     });
 
     expect(created.id).toBeTruthy();
-    expect(created.slug).toContain("deriving-equations-with-more-patience");
-    expect(created.tags).toEqual(["physics", "reflection"]);
+    expect(created.slug).toContain("2026-03-22");
+    expect(created.tags).toEqual(["物理", "反思"]);
+  });
+
+  it("supports Chinese titles when generating slugs", async () => {
+    const repo = new InMemoryStudyLogRepository();
+
+    const created = await createStudyLog({
+      actor: adminActor,
+      rawInput: {
+        ...validInput,
+        title: "重新整理受力分析",
+      },
+      repo,
+    });
+
+    expect(created.slug.startsWith("2026-03-22-")).toBe(true);
+    expect(created.slug.length).toBeGreaterThan("2026-03-22-".length);
   });
 
   it("edits an existing study log entry", async () => {
@@ -142,13 +157,13 @@ describe("study log service", () => {
       id: created.id,
       rawInput: {
         ...validInput,
-        title: "A more precise title after revision",
+        title: "修改后的标题更准确",
       },
       repo,
     });
 
-    expect(updated.title).toBe("A more precise title after revision");
-    expect(updated.slug).toContain("a-more-precise-title-after-revision");
+    expect(updated.title).toBe("修改后的标题更准确");
+    expect(updated.slug).toContain("2026-03-22-");
   });
 
   it("deletes a study log entry", async () => {
@@ -180,7 +195,7 @@ describe("study log service", () => {
       rawInput: {
         ...validInput,
         isPublic: true,
-        title: "Published entry",
+        title: "已经公开的日志",
       },
       repo,
     });

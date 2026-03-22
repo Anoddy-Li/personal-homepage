@@ -14,17 +14,13 @@ export default function GlobalError({
       <body className="min-h-screen bg-background text-foreground">
         <div className="container-shell flex min-h-screen items-center justify-center">
           <div className="max-w-xl space-y-4 rounded-[2rem] border border-border/70 bg-card/85 p-8 shadow-sm">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-              Unexpected error
-            </p>
-            <h1 className="font-heading text-4xl font-semibold tracking-tight">
-              Something interrupted the page.
-            </h1>
+            <p className="text-sm text-muted-foreground">页面错误</p>
+            <h1 className="font-heading text-4xl font-semibold tracking-tight">页面加载被中断了。</h1>
             <p className="leading-7 text-muted-foreground">
-              {error.message || "Please try again. If the issue persists, check the deployment logs."}
+              {error.message || "请稍后再试。如果问题持续存在，可以检查部署日志。"}
             </p>
             <Button onClick={reset} type="button">
-              Try again
+              重新加载
             </Button>
           </div>
         </div>

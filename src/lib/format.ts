@@ -11,15 +11,15 @@ export function formatDuration(durationMinutes: number | null) {
   }
 
   if (durationMinutes < 60) {
-    return `${durationMinutes} min`;
+    return `${durationMinutes} 分钟`;
   }
 
   const hours = Math.floor(durationMinutes / 60);
   const minutes = durationMinutes % 60;
 
   if (minutes === 0) {
-    return `${hours}h`;
+    return `${hours} 小时`;
   }
 
-  return `${hours}h ${minutes}m`;
+  return `${hours} 小时 ${minutes} 分钟`;
 }

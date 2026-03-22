@@ -5,15 +5,15 @@ import { StudyLogCard } from "@/components/study-log-card";
 import { StudyLogFilters } from "@/components/study-log-filters";
 import { profile } from "@/config/profile";
 import { createSupabaseStudyLogRepository } from "@/db/study-log-repository";
+import { isSupabaseConfigured } from "@/lib/env";
 import { buildMetadata } from "@/lib/metadata";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { getFeaturedTags, isFiltered, listPublicStudyLogs } from "@/lib/study-log-service";
-import { isSupabaseConfigured } from "@/lib/env";
 
 export const metadata = buildMetadata({
   description: "公开的学习日志，支持按日期、标签和关键词筛选。",
   path: "/study-log",
-  title: "Study Log",
+  title: "学习日志",
 });
 
 export default async function StudyLogPage({
@@ -27,9 +27,9 @@ export default async function StudyLogPage({
     return (
       <div className="container-shell space-y-10">
         <PageHero
-          eyebrow="Study Log"
-          title="A searchable archive of public learning notes."
-          description="The page structure is ready. Connect Supabase to turn on real data, filtering, and publishing."
+          eyebrow={profile.studyLogPage.eyebrow}
+          title="学习日志暂时不可用"
+          description="页面已经准备好，但当前环境缺少数据库配置，暂时无法读取日志数据。"
         />
         <SetupAlert />
       </div>
@@ -46,18 +46,22 @@ export default async function StudyLogPage({
   return (
     <div className="container-shell space-y-10">
       <PageHero
-        eyebrow="Study Log"
-        title="A public record of daily learning, revision, and reflection."
-        description="Search by keyword, narrow by date, or browse by tags. Only published entries are visible on the public site."
+        eyebrow={profile.studyLogPage.eyebrow}
+        title={profile.studyLogPage.title}
+        description={profile.studyLogPage.description}
       />
       <StudyLogFilters action="/study-log" filters={filters} suggestedTags={suggestedTags} />
       {logs.length === 0 ? (
         <EmptyState
-          title={isFiltered(filters) ? "No entries match these filters" : "No public study logs yet"}
+          title={
+            isFiltered(filters)
+              ? profile.studyLogPage.filteredEmptyTitle
+              : profile.studyLogPage.emptyTitle
+          }
           description={
             isFiltered(filters)
-              ? "Try a different keyword, clear the date filter, or switch to another tag."
-              : "Once an entry is published from the admin area, it will appear here automatically."
+              ? profile.studyLogPage.filteredEmptyDescription
+              : profile.studyLogPage.emptyDescription
           }
         />
       ) : (

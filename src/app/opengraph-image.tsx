@@ -16,7 +16,7 @@ export default function OpenGraphImage() {
         style={{
           alignItems: "stretch",
           background:
-            "linear-gradient(135deg, rgb(248, 245, 238) 0%, rgb(234, 242, 243) 60%, rgb(226, 232, 240) 100%)",
+            "linear-gradient(135deg, rgb(248, 245, 238) 0%, rgb(235, 241, 236) 58%, rgb(229, 232, 237) 100%)",
           color: "#243042",
           display: "flex",
           fontFamily: "sans-serif",
@@ -37,12 +37,10 @@ export default function OpenGraphImage() {
           <div
             style={{
               fontSize: 24,
-              letterSpacing: "0.28em",
               opacity: 0.7,
-              textTransform: "uppercase",
             }}
           >
-            Personal Homepage
+            个人主页
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div
@@ -55,12 +53,8 @@ export default function OpenGraphImage() {
             >
               {profile.name}
             </div>
-            <div style={{ fontSize: 34, lineHeight: 1.35, opacity: 0.9 }}>
-              {profile.role}
-            </div>
-            <div style={{ fontSize: 28, lineHeight: 1.5, opacity: 0.82 }}>
-              {profile.hero.intro}
-            </div>
+            <div style={{ fontSize: 34, lineHeight: 1.35, opacity: 0.9 }}>{profile.role}</div>
+            <div style={{ fontSize: 28, lineHeight: 1.5, opacity: 0.82 }}>{profile.hero.intro}</div>
           </div>
         </div>
         <div

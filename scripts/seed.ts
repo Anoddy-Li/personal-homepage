@@ -1,65 +1,61 @@
 import { createClient } from "@supabase/supabase-js";
-import slugify from "slugify";
 
 import type { Database } from "../src/db/database.types";
 import { getErrorMessage } from "../src/lib/app-error";
 import { env, isSupabaseAdminConfigured } from "../src/lib/env";
+import { buildStudyLogBaseSlug } from "../src/lib/study-log-slug";
 import { parseStudyLogFormValues } from "../src/schemas/study-log";
 
 async function main() {
   if (!isSupabaseAdminConfigured()) {
     throw new Error(
-      "Missing Supabase admin configuration. Set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY first.",
+      "缺少 Supabase 管理端配置，请先设置 NEXT_PUBLIC_SUPABASE_URL、NEXT_PUBLIC_SUPABASE_ANON_KEY 和 SUPABASE_SERVICE_ROLE_KEY。",
     );
   }
 
-  const supabase = createClient<Database>(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.SUPABASE_SERVICE_ROLE_KEY,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
+  const supabase = createClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
-  );
+  });
 
   const entries = [
     {
-      content: `## What I studied
+      content: `## 今天学了什么
 
-- Reviewed kinematics notes
-- Re-derived constant acceleration equations
-- Wrote a short recap in my own words
+- 回顾匀加速直线运动的基本推导
+- 重新整理速度、位移和时间之间的关系
+- 把推导过程改写成更容易复习的版本
 
-## Reflection
+## 复盘
 
-The math felt more stable after I forced myself to explain why each term appears in the derivation instead of just memorizing the final formula.`,
+真正重新推一遍公式之后，理解会比只记结果更稳。以后遇到类似内容，我想继续坚持“先推导，再总结”的节奏。`,
       date: "2026-03-20",
       durationMinutes: "95",
       isPublic: true,
-      mood: "Focused",
-      summary: "Revisited constant acceleration from first principles and wrote a clearer summary.",
-      tagsInput: "physics, mechanics, reflection",
-      title: "Re-deriving constant acceleration formulas",
+      mood: "专注",
+      summary: "重新推导匀加速运动公式，并把过程整理成更容易复习的笔记。",
+      tagsInput: "物理, 力学, 反思",
+      title: "重新推导匀加速运动公式",
     },
     {
-      content: `## What I studied
+      content: `## 今天学了什么
 
-- Refactored a small Next.js form component
-- Tightened validation rules with Zod
-- Documented what still feels repetitive
+- 调整一个 Next.js 表单页面的结构
+- 重新检查 Zod 校验边界
+- 把重复的交互反馈整理得更清楚
 
-## Reflection
+## 复盘
 
-Small interface decisions become easier once the data shape is strict. I want to keep that standard across future projects.`,
+表单体验往往不是靠大改，而是靠一处一处细小调整。数据结构越清楚，页面维护起来就越轻松。`,
       date: "2026-03-21",
       durationMinutes: "75",
       isPublic: false,
-      mood: "Steady",
-      summary: "Worked on frontend form ergonomics and clarified validation boundaries.",
-      tagsInput: "coding, typescript, zod",
-      title: "Improving a form workflow with stricter validation",
+      mood: "平稳",
+      summary: "继续打磨表单体验，并梳理校验与反馈之间的边界。",
+      tagsInput: "编程, typescript, zod",
+      title: "继续整理表单体验和校验边界",
     },
   ].map((entry) => {
     const parsed = parseStudyLogFormValues(entry);
@@ -70,11 +66,7 @@ Small interface decisions become easier once the data shape is strict. I want to
       duration_minutes: parsed.durationMinutes,
       is_public: parsed.isPublic,
       mood: parsed.mood,
-      slug: slugify(`${parsed.date} ${parsed.title}`, {
-        lower: true,
-        strict: true,
-        trim: true,
-      }),
+      slug: buildStudyLogBaseSlug(parsed.date, parsed.title),
       summary: parsed.summary,
       tags: parsed.tags,
       title: parsed.title,
@@ -89,10 +81,10 @@ Small interface decisions become easier once the data shape is strict. I want to
     throw new Error(error.message);
   }
 
-  console.log(`Seeded ${entries.length} study log entries.`);
+  console.log(`已写入 ${entries.length} 篇示例学习日志。`);
 }
 
 main().catch((error) => {
-  console.error(getErrorMessage(error, "Failed to seed study logs."));
+  console.error(getErrorMessage(error, "写入示例学习日志失败。"));
   process.exitCode = 1;
 });

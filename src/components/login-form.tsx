@@ -71,7 +71,7 @@ export function LoginForm({
         | null;
 
       if (!response.ok) {
-        throw new Error(payload?.error ?? "Unable to sign in.");
+        throw new Error(payload?.error ?? "登录失败。");
       }
 
       startTransition(() => {
@@ -79,7 +79,7 @@ export function LoginForm({
         router.refresh();
       });
     } catch (error) {
-      setErrorMessage(getErrorMessage(error, "Unable to sign in."));
+      setErrorMessage(getErrorMessage(error, "登录失败。"));
     } finally {
       setIsPending(false);
     }
@@ -92,32 +92,24 @@ export function LoginForm({
         void onSubmit(values);
       })}
     >
-      {errorMessage ? (
-        <StatusAlert
-          description={errorMessage}
-          title="Sign-in failed"
-          tone="error"
-        />
-      ) : null}
+      {errorMessage ? <StatusAlert description={errorMessage} title="登录失败" tone="error" /> : null}
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">邮箱</Label>
         <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
         <p className="text-sm text-destructive">{form.formState.errors.email?.message}</p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">密码</Label>
         <Input
           id="password"
           type="password"
           autoComplete="current-password"
           {...form.register("password")}
         />
-        <p className="text-sm text-destructive">
-          {form.formState.errors.password?.message}
-        </p>
+        <p className="text-sm text-destructive">{form.formState.errors.password?.message}</p>
       </div>
       <Button className="w-full" disabled={isPending} type="submit">
-        {isPending ? "Signing in..." : "Sign in as admin"}
+        {isPending ? "登录中..." : "以管理员身份登录"}
       </Button>
     </form>
   );

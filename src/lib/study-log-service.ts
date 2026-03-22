@@ -1,4 +1,3 @@
-import slugify from "slugify";
 import type { User } from "@supabase/supabase-js";
 
 import type {
@@ -8,21 +7,16 @@ import type {
 } from "@/db/study-log-repository";
 import { AppError } from "@/lib/app-error";
 import { assertAdminAccess } from "@/lib/auth";
+import { buildStudyLogBaseSlug } from "@/lib/study-log-slug";
+import type { RouteSearchParams } from "@/lib/url";
 import {
   parseStudyLogFilters,
   parseStudyLogFormValues,
   type StudyLogFilterValues,
 } from "@/schemas/study-log";
-import type { RouteSearchParams } from "@/lib/url";
 
 function buildBaseSlug(date: string, title: string) {
-  return (
-    slugify(`${date} ${title}`, {
-      lower: true,
-      strict: true,
-      trim: true,
-    }) || `study-log-${date}`
-  );
+  return buildStudyLogBaseSlug(date, title);
 }
 
 async function generateUniqueSlug(
@@ -90,16 +84,11 @@ export async function updateStudyLog(params: {
   const existing = await params.repo.findById(params.id);
 
   if (!existing) {
-    throw new AppError(404, "Study log entry not found.");
+    throw new AppError(404, "学习日志不存在。");
   }
 
   const input = parseStudyLogFormValues(params.rawInput);
-  const slug = await generateUniqueSlug(
-    params.repo,
-    input.date,
-    input.title,
-    params.id,
-  );
+  const slug = await generateUniqueSlug(params.repo, input.date, input.title, params.id);
 
   return params.repo.update(params.id, buildWriteInput(input, slug, existing.authorId));
 }
@@ -114,7 +103,7 @@ export async function deleteStudyLog(params: {
   const existing = await params.repo.findById(params.id);
 
   if (!existing) {
-    throw new AppError(404, "Study log entry not found.");
+    throw new AppError(404, "学习日志不存在。");
   }
 
   await params.repo.delete(params.id);
@@ -131,7 +120,7 @@ export async function setStudyLogVisibility(params: {
   const existing = await params.repo.findById(params.id);
 
   if (!existing) {
-    throw new AppError(404, "Study log entry not found.");
+    throw new AppError(404, "学习日志不存在。");
   }
 
   return params.repo.update(params.id, {
@@ -146,7 +135,7 @@ export async function getPublicStudyLogBySlug(params: {
   const log = await params.repo.findPublicBySlug(params.slug);
 
   if (!log) {
-    throw new AppError(404, "Study log entry not found.");
+    throw new AppError(404, "学习日志不存在。");
   }
 
   return log;
@@ -162,7 +151,7 @@ export async function getStudyLogById(params: {
   const log = await params.repo.findById(params.id);
 
   if (!log) {
-    throw new AppError(404, "Study log entry not found.");
+    throw new AppError(404, "学习日志不存在。");
   }
 
   return log;

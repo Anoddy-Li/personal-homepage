@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message ?? "Invalid credentials." },
+        { error: parsed.error.issues[0]?.message ?? "登录信息不合法。" },
         { status: 400 },
       );
     }
@@ -32,20 +32,15 @@ export async function POST(request: Request) {
       await supabase.auth.signOut();
 
       return NextResponse.json(
-        { error: "This account is not allowed to access the admin dashboard." },
+        { error: "这个账号没有后台访问权限。" },
         { status: 403 },
       );
     }
 
     return NextResponse.json({
-      redirectTo: safeRedirectPath(
-        typeof body.next === "string" ? body.next : "/admin",
-      ),
+      redirectTo: safeRedirectPath(typeof body.next === "string" ? body.next : "/admin"),
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: getErrorMessage(error, "Unable to sign in.") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getErrorMessage(error, "登录失败。") }, { status: 500 });
   }
 }

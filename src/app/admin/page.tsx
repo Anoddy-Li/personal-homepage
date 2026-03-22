@@ -17,9 +17,9 @@ export default async function AdminDashboardPage() {
     <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
       <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
         {[
-          { label: "Total entries", value: summary.totalCount },
-          { label: "Public entries", value: summary.publicCount },
-          { label: "Draft entries", value: summary.draftCount },
+          { label: "日志总数", value: summary.totalCount },
+          { label: "已公开", value: summary.publicCount },
+          { label: "草稿", value: summary.draftCount },
         ].map((item) => (
           <Card key={item.label} className="rounded-[2rem] border-border/70 bg-card/80">
             <CardHeader>
@@ -33,7 +33,7 @@ export default async function AdminDashboardPage() {
       </div>
       <Card className="rounded-[2rem] border-border/70 bg-card/80">
         <CardHeader>
-          <CardTitle className="font-heading text-3xl">Recent entries</CardTitle>
+          <CardTitle className="font-heading text-3xl">最近更新</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {logs.slice(0, 5).map((log) => (

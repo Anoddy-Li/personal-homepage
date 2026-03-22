@@ -6,17 +6,17 @@ export function SetupAlert() {
   return (
     <div className="space-y-3">
       <StatusAlert
-        title="Supabase setup required"
-        description="The site is ready, but database-backed study logs need Supabase environment variables before content can load."
+        title="需要完成 Supabase 配置"
+        description="网站结构已经准备好，但学习日志依赖数据库；在环境变量补齐之前，日志内容无法读取。"
         tone="info"
       />
       <p className="text-sm text-muted-foreground">
-        Copy <code className="rounded bg-secondary px-1.5 py-0.5">.env.example</code> to{" "}
-        <code className="rounded bg-secondary px-1.5 py-0.5">.env.local</code>, fill the
-        Supabase keys, then run the migration and seed steps from the README.
+        先把 <code className="rounded bg-secondary px-1.5 py-0.5">.env.example</code> 复制成{" "}
+        <code className="rounded bg-secondary px-1.5 py-0.5">.env.local</code>，再补齐 Supabase
+        相关环境变量，并按 README 中的步骤执行 migration 和 seed。
       </p>
       <Link href="/contact" className="text-sm text-foreground underline underline-offset-4">
-        Contact page preview is still available while setup is pending.
+        即使数据库尚未接好，联系页仍然可以正常预览。
       </Link>
     </div>
   );
