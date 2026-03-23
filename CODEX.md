@@ -25,6 +25,8 @@
 - 标签必须通过 `/admin/tags` 和数据库维护，不要重新写回前端常量
 - header 保持“仅顶部范围可见”的产品级交互，回到顶部按钮与它共用同一套顶部阈值
 - 不要在公开页面提示用户通过改源文件来发布日志
+- README 应保持“项目主页 + 开发文档并存”的风格，不要退回操作手册式写法
+- 正式项目介绍文档维护在 [docs/project-introduction.md](/E:/personal-homepage/docs/project-introduction.md)，需要保持结构化、图表化与严谨表达
 
 ## 修改后必须做的事
 

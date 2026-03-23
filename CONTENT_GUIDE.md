@@ -221,3 +221,17 @@ git push origin main
 - [src/app/globals.css](/E:/personal-homepage/src/app/globals.css)
 - [src/app/(site)/about/page.tsx](/E:/personal-homepage/src/app/(site)/about/page.tsx)
 - [README.md](/E:/personal-homepage/README.md)
+
+## 12. 如果我要修改仓库展示文档，改哪里
+
+如果你想修改 GitHub 仓库首页展示：
+
+- 改 [README.md](/E:/personal-homepage/README.md)
+
+如果你想修改更正式、偏论文风格的项目介绍：
+
+- 改 [project-introduction.md](/E:/personal-homepage/docs/project-introduction.md)
+
+如果你想替换 README 或项目介绍里的截图：
+
+- 改 [screenshots](/E:/personal-homepage/docs/assets/screenshots)
